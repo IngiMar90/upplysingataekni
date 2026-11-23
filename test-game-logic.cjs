@@ -55,14 +55,20 @@ for (const level of [1, 2, 3]) {
     assert.equal(lesson.change('resize',{...lesson.state,size:119}),false,'A tiny resize is not accepted');
     assert(lesson.change('resize',{...lesson.state,size:80}));
   }
-  if (level===3) assert(lesson.change('delete',{...lesson.state,visible:false}));
+  const resized = {...lesson.state};
+  if (level===3) {
+    assert.deepEqual(lesson.actions,['move','resize','move']);
+    assert.equal(lesson.change('delete',{...lesson.state,visible:false}),false);
+    assert(lesson.change('move',{...lesson.state,x:38,y:65}));
+    assert.equal(lesson.history.past.length,3,'The second move is a separate undo step');
+  }
   assert.equal(lesson.readyToUndo,true);
   assert.equal(lesson.change('move',{...lesson.state,x:40}),false,'Editing ends when the undo task begins');
   for(let i=level;i>0;i--) {
     assert(lesson.undo());
     assert.equal(lesson.history.past.length,i-1);
     assert.equal(lesson.complete,i===1,'Every user change must be undone');
-    if(level===3 && i===3) assert.equal(lesson.state.visible,true,'Undo restores the deleted picture first');
+    if(level===3 && i===3) assert.deepEqual(lesson.state,resized,'The first undo reverses the second move while retaining the resized picture');
     if(level>1 && i===2) assert.deepEqual(lesson.state,moved,'The next undo restores its previous size and position');
   }
   assert.deepEqual(lesson.state,{x:50,y:50,size:120,visible:true});
