@@ -120,19 +120,18 @@ function picture() {
 function undo() {
   const level = settings.level, key = ['ball', 'duck', 'car', 'teddy', 'kite', 'blocks', 'train', 'apple'][round % 8];
   const lesson = new GameTools.UndoLesson(level);
-  const actionLabels = { move: t('Færðu myndina á annan stað.'), resize: t('Dragðu hornið til að breyta stærð.'), delete: t('Veldu myndina og ýttu á Delete.') };
+  const actionLabels = { move: t('Færðu myndina á annan stað.'), resize: t('Dragðu hornið til að breyta stærð.') };
+  const actionLabel = (kind, index) => kind === 'move' && index === 2 ? t('Færðu myndina aftur á annan stað.') : actionLabels[kind];
   const actionDetails = {
     move: t('Haltu músarhnappnum niðri á myndinni, dragðu hana og slepptu. Örvatakkar geta líka fært myndina.'),
-    resize: t('Haltu litla horninu niðri og dragðu til að stækka eða minnka myndina. Örvatakkar á horninu virka líka.'),
-    delete: t('Smelltu á myndina og ýttu á Delete á lyklaborðinu. Á Chromebook má nota Alt + Backspace.')
+    resize: t('Haltu litla horninu niðri og dragðu til að stækka eða minnka myndina. Örvatakkar á horninu virka líka.')
   };
   const undoHint = t('Haltu Ctrl niðri og ýttu á Z til að afturkalla. Slepptu síðan báðum tökkunum.');
   const snapshots = [{ ...lesson.initial }];
-  lesson.actions.forEach(kind => {
+  lesson.actions.forEach((kind, index) => {
     const state = { ...snapshots.at(-1) };
-    if (kind === 'move') { state.x = 72; state.y = 38; }
+    if (kind === 'move') { state.x = index === 2 ? 38 : 72; state.y = index === 2 ? 65 : 38; }
     else if (kind === 'resize') state.size = 78;
-    else state.visible = false;
     snapshots.push(state);
   });
   const frames = [{ state: snapshots[0], kind: 'intro' }, ...lesson.actions.map((kind, i) => ({ state: snapshots[i + 1], kind }))];
@@ -141,7 +140,7 @@ function undo() {
   const pointerArt = '<svg viewBox="0 0 32 40" aria-hidden="true"><path d="M4 2v29l8-7 6 13 7-3-6-12h11Z" fill="#fff" stroke="#493c8a" stroke-width="3" stroke-linejoin="round"/></svg>';
   $('#surface').innerHTML = `<div class="undo-lesson">
     <div class="undo-lesson-head"><strong id="undo-mode"></strong><span id="undo-demo-count"></span><button class="quiet" id="undo-demo">${t('Sýna mér aftur')}</button></div>
-    <ol class="undo-plan">${lesson.actions.map((kind, i) => `<li data-undo-step="${i}"><span aria-hidden="true">${i + 1}</span>${actionLabels[kind]}</li>`).join('')}<li data-undo-step="${lesson.actions.length}"><span aria-hidden="true">↶</span>Ctrl + Z · ${t('Afturkalla')}</li></ol>
+    <ol class="undo-plan">${lesson.actions.map((kind, i) => `<li data-undo-step="${i}"><span aria-hidden="true">${i + 1}</span>${actionLabel(kind, i)}</li>`).join('')}<li data-undo-step="${lesson.actions.length}"><span aria-hidden="true">↶</span>Ctrl + Z · ${t('Afturkalla')}</li></ol>
     <div class="undo-support">
     <div class="undo-guidance" id="undo-guidance" role="status"></div>
     <div class="undo-keyboard" id="undo-keyboard" aria-keyshortcuts="Control+Z"><div><kbd id="undo-ctrl">Ctrl</kbd><b>+</b><kbd id="undo-z">Z</kbd><strong>↶ ${t('Afturkalla')}</strong></div><p>${undoHint}</p><small id="undo-count"></small></div>
@@ -186,9 +185,9 @@ function undo() {
       const kind = frames[frame].kind;
       title = t('Sýnikennsla: breyttu og afturkallaðu með Ctrl + Z.');
       detail = kind === 'intro' ? t('Fyrst er myndin óbreytt. Horfðu á breytingarnar, eina í einu.') : kind === 'undo' ? frame === frames.length - 1 ? t('Ctrl + Z hefur fært myndina aftur eins og hún var. Nú mátt þú prófa.') : t('Ctrl + Z afturkallar síðustu breytinguna. Ýttu aftur til að fara eitt skref lengra til baka.') : actionDetails[kind];
-      $('#undo-guidance').textContent = kind === 'intro' ? t('Veldu Næsta sýniskref til að sjá hvað gerist.') : kind === 'undo' ? t('Ctrl + Z · Afturkalla síðustu breytingu') : actionLabels[kind];
+      $('#undo-guidance').textContent = kind === 'intro' ? t('Veldu Næsta sýniskref til að sjá hvað gerist.') : kind === 'undo' ? t('Ctrl + Z · Afturkalla síðustu breytingu') : actionLabel(kind, frame - 1);
     } else {
-      title = lesson.readyToUndo ? t('Ýttu á Ctrl + Z til að laga myndina.') : actionLabels[lesson.nextAction];
+      title = lesson.readyToUndo ? t('Ýttu á Ctrl + Z til að laga myndina.') : actionLabel(lesson.nextAction, lesson.history.past.length);
       detail = lesson.readyToUndo ? undoHint : actionDetails[lesson.nextAction] + ' ' + t('Síðan notarðu Ctrl + Z til að afturkalla.');
       $('#undo-guidance').textContent = solved ? t('Þú lagaðir myndina með Ctrl + Z. Vel gert!') : lesson.readyToUndo ? t('Breytingarnar eru þínar. Færðu þær til baka með Ctrl + Z.') : t('Gerðu breytinguna sjálf/ur á myndinni.');
     }
@@ -247,11 +246,7 @@ function undo() {
     if ($('dialog[open]') || ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName) || e.target.isContentEditable) return;
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') { e.preventDefault(); if (!e.repeat) goBack(); $('#undo-ctrl').classList.add('pressed'); $('#undo-z').classList.add('pressed'); return; }
     if (e.key === 'Control') $('#undo-ctrl').classList.add('pressed');
-    if ((e.key === 'Delete' || (e.altKey && e.key === 'Backspace')) && !demonstration && !solved && lesson.nextAction === 'delete') {
-      e.preventDefault(); if (e.repeat) return;
-      if (!selected) { feedback(t('Smelltu fyrst á myndina til að velja hana.')); return; }
-      commit('delete', {...lesson.state,visible:false});
-    }
+
   });
   const releaseKeys = () => { $('#undo-ctrl')?.classList.remove('pressed'); $('#undo-z')?.classList.remove('pressed'); };
   listen(document,'keyup',releaseKeys); listen(window,'blur',releaseKeys);

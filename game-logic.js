@@ -14,7 +14,7 @@ const GameTools = (() => {
       if (![1, 2, 3].includes(level)) throw new RangeError('Unknown lesson level');
       this.initial = clone(initial);
       this.history = new DrawingHistory(initial);
-      this.actions = ['move', 'resize', 'delete'].slice(0, level);
+      this.actions = ['move', 'resize', 'move'].slice(0, level);
       this.readyToUndo = false;
     }
     get state() { return this.history.state; }
@@ -24,7 +24,7 @@ const GameTools = (() => {
       const before = this.state;
       const valid = kind === 'move' ? next.visible === before.visible && next.size === before.size && Math.hypot(next.x - before.x, next.y - before.y) >= 2
         : kind === 'resize' ? next.visible === before.visible && Math.abs(next.size - before.size) >= 12
-          : next.visible === false && before.visible && next.x === before.x && next.y === before.y && next.size === before.size;
+          : false;
       if (!valid || !this.history.apply(next)) return false;
       if (this.history.past.length === this.actions.length) this.readyToUndo = true;
       return true;

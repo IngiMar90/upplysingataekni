@@ -1141,6 +1141,10 @@ const I18n = (() => {
   "Prófaðu með kennara: færðu mynd í PowerPoint og ýttu á Ctrl + Z til að færa hana til baka.": [
     "Try with your teacher: move a picture in PowerPoint and press Ctrl + Z to move it back.",
     "Spróbuj z nauczycielem: przesuń obrazek w PowerPoint i naciśnij Ctrl + Z, aby go przywrócić."
+  ],
+  "Færðu myndina aftur á annan stað.": [
+    "Move the picture to another place again.",
+    "Ponownie przesuń obrazek w inne miejsce."
   ]
 };
   const words = {
