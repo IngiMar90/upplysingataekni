@@ -6,6 +6,8 @@ assert.equal(manifest.scope, './');
 assert.equal(manifest.start_url, './');
 assert.equal(manifest.display, 'standalone');
 for (const icon of manifest.icons) assert(existsSync('dist/' + icon.src), icon.src);
+const workerSource = readFileSync('dist/sw.js', 'utf8');
+const currentCache = workerSource.match(/const CACHE = '([^']+)'/)[1];
 const handlers = {}, deleted = [], cached = [];
 let claimed = false;
 const context = {
@@ -13,7 +15,7 @@ const context = {
   self: { location: {origin: 'https://example.test'}, clients: {claim: async () => {claimed = true;}}, addEventListener: (type, handler) => {handlers[type] = handler;} },
   caches: {
     open: async () => ({addAll: async assets => {for (const asset of assets) {assert(existsSync('dist/' + (asset === './' ? 'index.html' : asset.slice(2))), asset);cached.push(asset);}}}),
-    keys: async () => ['tolvuleikir-v0', 'tolvuleikir-v3', 'other-app'],
+    keys: async () => ['tolvuleikir-v0', currentCache, 'other-app'],
     delete: async key => {deleted.push(key);},
     match: async request => ({offline: true, request})
   },

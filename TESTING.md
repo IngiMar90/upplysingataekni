@@ -11,3 +11,12 @@
 Installation on school-managed Windows/Chromebook devices, touch input, native Icelandic voices and screen reader behavior must still be checked on the intended devices. Browser checks are not a guarantee of a school's installation policy. The game does not lock other applications or prevent Esc; full kiosk restrictions are device administration.
 
 Static hosting uses only local assets. No external analytics, accounts or API calls are required by the app. Optional speech uses the browser's system voices.
+
+## Update: clearer toys, automatic advancement and larger levels
+
+- Visually inspected a rendered sheet of the updated soccer ball, blocks, kite, teddy, toy car, train, bath duck and puzzle.
+- Browser verified nine-file sorting automatically moves from task 1 to task 2 of 10, with no next button.
+- Full six-task level 1 typing session automatically completed without Enter or next clicks.
+- Full ten-task level 3 typing session automatically completed, including capital letters, punctuation, spaces and final Backspace correction.
+- Confirmed six sorting objects on level 2 and nine on level 3; treasure counts are 24 on level 2 and 40 on level 3. Treasure automatically advances while retaining scroll position.
+- Re-ran offline-cache and manifest verification with all new assets included.

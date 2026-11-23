@@ -7,7 +7,8 @@ let settings = { ...defaults, ...readStore('tolvuleikir-settings', {}) };
 if (![1, 2, 3].includes(settings.level)) settings.level = 1;
 let progress = readStore('tolvuleikir-progress', {});
 function persist(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* Playing remains possible without storage. */ } }
-let current = null, round = 0, cleanups = [], deferredInstall = null, audioContext;
+let current = null, round = 0, cleanups = [], deferredInstall = null, audioContext, advanceTimer = null;
+const sessionLength = () => [6, 8, 10][settings.level - 1];
 const games = {
   pack: { name: 'Pakkasmiðjan', skill: 'Draga og sleppa', description: 'Settu hlutina á réttan stað.', tint: '#eef6ee', icon: 'pack', learned: 'Þú æfðir að velja hluti og færa þá á réttan stað.', bridge: 'Prófaðu með kennara: dragðu mynd inn á glæru í PowerPoint.' },
   treasure: { name: 'Fjársjóðsleit', skill: 'Skruna og finna', description: 'Skrunaðu og finndu fjársjóðinn.', tint: '#fff3df', icon: 'treasure', learned: 'Þú æfðir að skruna upp og niður og finna ákveðinn hlut.', bridge: 'Prófaðu með kennara: finndu mynd neðar á venjulegri vefsíðu.' },
@@ -16,14 +17,15 @@ const games = {
 const objects = {
   apple: ['Epli', 'food'], pear: ['Pera', 'food'], banana: ['Banani', 'food'], carrot: ['Gulrót', 'food'],
   ball: ['Bolti', 'toys'], kite: ['Flugdreki', 'toys'], blocks: ['Kubbar', 'toys'], teddy: ['Bangsi', 'toys'],
+  car: ['Leikfangabíll', 'toys'], train: ['Lest', 'toys'], duck: ['Baðönd', 'toys'], puzzle: ['Púsl', 'toys'],
   hammer: ['Hamar', 'tools'], brush: ['Pensill', 'tools'], wrench: ['Skiptilykill', 'tools'], ruler: ['Reglustika', 'tools'],
   photo: ['Mynd', 'images'], landscape: ['Landslag', 'images'], portrait: ['Andlit', 'images'],
   document: ['Texti', 'text'], letter: ['Bréf', 'text'], notebook: ['Glósubók', 'text'],
-  headphones: ['Heyrnartól', 'sound'], music: ['Tónlist', 'sound'], leaf: ['Lauf', 'nature'], star: ['Stjarna', 'nature'],
+  headphones: ['Heyrnartól', 'sound'], music: ['Tónlist', 'sound'], speaker: ['Hátalari', 'sound'], leaf: ['Lauf', 'nature'], star: ['Stjarna', 'nature'],
   cup: ['Bolli', 'home'], key: ['Lykill', 'home']
 };
 const img = (name, cls = '', alt = '') => `<img src="assets/${name}.svg" class="${cls}" alt="${alt}" draggable="false">`;
-function dispose() { cleanups.forEach(fn => fn()); cleanups = []; if ('speechSynthesis' in window) speechSynthesis.cancel(); }
+function dispose() { clearTimeout(advanceTimer); advanceTimer = null; cleanups.forEach(fn => fn()); cleanups = []; if ('speechSynthesis' in window) speechSynthesis.cancel(); }
 function listen(node, event, handler, options) { node.addEventListener(event, handler, options); cleanups.push(() => node.removeEventListener(event, handler, options)); }
 function announce(message) { $('#announcement').textContent = ''; requestAnimationFrame(() => { $('#announcement').textContent = message; }); }
 function feedback(message, kind = '') { const el = $('#feedback'); if (el) { el.className = 'feedback ' + kind; el.textContent = message; } announce(message); }
@@ -49,7 +51,7 @@ function start(id) { dispose(); current = id; round = 0; renderGame(); }
 function shell() {
   const g = games[current];
   document.body.classList.add('playing');
-  app.innerHTML = `<section class="game-top"><div class="game-identity">${img(g.icon)}<div><h1>${g.name}</h1><p>Stig ${settings.level} · ${g.skill}</p></div></div><div class="game-actions"><button class="quiet" id="home">Velja leik</button><div class="steps" role="img" aria-label="Verkefni ${round + 1} af 6">${Array.from({ length: 6 }, (_, i) => `<span class="step ${i < round ? 'done' : i === round ? 'current' : ''}"></span>`).join('')}</div></div></section><section class="instruction"><div><h2 id="task-title" tabindex="-1"></h2><p id="task-detail"></p></div><button class="icon-button" id="read-task" aria-label="Lesa fyrirmæli" title="Lesa fyrirmæli">♬</button></section><section id="surface" class="game-surface" aria-label="Leiksvæði"></section><div class="game-footer"><p id="feedback" class="feedback" role="status" aria-live="polite"></p><div class="bottom-actions" id="next-area"></div></div>`;
+  app.innerHTML = `<section class="game-top"><div class="game-identity">${img(g.icon)}<div><h1>${g.name}</h1><p>Stig ${settings.level} · ${g.skill}</p></div></div><div class="game-actions"><button class="quiet" id="home">Velja leik</button><div class="steps" role="img" aria-label="Verkefni ${round + 1} af ${sessionLength()}">${Array.from({ length: sessionLength() }, (_, i) => `<span class="step ${i < round ? 'done' : i === round ? 'current' : ''}"></span>`).join('')}</div></div></section><section class="instruction"><div><h2 id="task-title" tabindex="-1"></h2><p id="task-detail"></p></div><button class="icon-button" id="read-task" aria-label="Lesa fyrirmæli" title="Lesa fyrirmæli">♬</button></section><section id="surface" class="game-surface" aria-label="Leiksvæði"></section><div class="game-footer"><p id="feedback" class="feedback" role="status" aria-live="polite"></p><div class="bottom-actions" id="next-area"></div></div>`;
   $('#home').onclick = () => home(true);
   $('#read-task').onclick = () => speak($('#task-title').textContent + '. ' + $('#task-detail').textContent);
 }
@@ -57,27 +59,38 @@ function instruction(title, detail) {
   $('#task-title').textContent = title; $('#task-detail').textContent = detail;
   if (settings.speech) speak(title + '. ' + detail);
 }
-function renderGame() { dispose(); shell(); if (current === 'pack') pack(); else if (current === 'treasure') treasure(); else robot(); $('#task-title').focus({ preventScroll: true }); }
-function nextButton(callback) {
-  $('#next-area').innerHTML = `<button class="primary" id="next">${round === 5 ? 'Ljúka umferð' : 'Næsta verkefni'}</button>`;
-  $('#next').onclick = callback || (() => { round++; if (round === 6) complete(); else renderGame(); });
+function renderGame(keepTyping = false) {
+  dispose(); shell(); if (current === 'pack') pack(); else if (current === 'treasure') treasure(); else robot();
+  if (keepTyping && current === 'robot') { const field = $('#type-input'); field.focus({ preventScroll: true }); field.setSelectionRange(field.value.length, field.value.length); }
+  else $('#task-title').focus({ preventScroll: true });
+}
+function autoAdvance(callback) {
+  clearTimeout(advanceTimer);
+  $('#next-area').innerHTML = '<span class="auto-note">Held áfram sjálfkrafa…</span>';
+  const advance = () => {
+    if ($('dialog[open]')) { advanceTimer = setTimeout(advance, 200); return; }
+    advanceTimer = null;
+    if (callback) callback();
+    else { round++; if (round === sessionLength()) complete(); else renderGame(current === 'robot'); }
+  };
+  advanceTimer = setTimeout(advance, 1000);
 }
 function complete() {
   const id = current, g = games[id]; dispose(); document.body.classList.remove('playing'); progress[id] = (Number(progress[id]) || 0) + 1; persist('tolvuleikir-progress', progress);
-  app.innerHTML = `<section class="completion">${img('medal')}<p class="eyebrow">Sex verkefni búin</p><h1 tabindex="-1">Vel gert!</h1><p>Þú laukst umferð í ${g.name === 'Pakkasmiðjan' ? 'Pakkasmiðjunni' : g.name === 'Fjársjóðsleit' ? 'Fjársjóðsleit' : 'Vélmennaritun'}.</p><div class="skill-card"><strong>${g.learned}</strong><p>${g.bridge}</p></div><div class="buttons"><button class="primary" id="again">Spila aftur</button><button class="secondary" id="choose">Velja annan leik</button></div></section>`;
+  app.innerHTML = `<section class="completion">${img('medal')}<p class="eyebrow">${sessionLength()} verkefni búin</p><h1 tabindex="-1">Vel gert!</h1><p>Þú laukst umferð í ${g.name === 'Pakkasmiðjan' ? 'Pakkasmiðjunni' : g.name === 'Fjársjóðsleit' ? 'Fjársjóðsleit' : 'Vélmennaritun'}.</p><div class="skill-card"><strong>${g.learned}</strong><p>${g.bridge}</p></div><div class="buttons"><button class="primary" id="again">Spila aftur</button><button class="secondary" id="choose">Velja annan leik</button></div></section>`;
   $('#again').onclick = () => start(id); $('#choose').onclick = () => home(true); $('h1', app).focus(); chime();
 }
 function shuffle(list) { const a = [...list]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
 function pack() {
   const level = settings.level;
-  const pairs = level === 1 ? [['food', 'toys']] : level === 2 ? [['food', 'toys'], ['tools', 'food'], ['toys', 'tools']] : [['images', 'text'], ['text', 'sound'], ['images', 'sound']];
+  const pairs = level === 1 ? [['food', 'toys']] : level === 2 ? [['food', 'toys', 'tools']] : [['images', 'text', 'sound']];
   const cats = pairs[round % pairs.length], names = { food: 'Matur', toys: 'Leikföng', tools: 'Verkfæri', images: 'Myndir', text: 'Textar', sound: 'Hljóð' };
   const examples = { food: 'apple', toys: 'ball', tools: 'hammer', images: 'photo', text: 'document', sound: 'music' };
-  let items = cats.flatMap(cat => shuffle(Object.keys(objects).filter(k => objects[k][1] === cat)).slice(0, level === 1 ? (cat === cats[0] ? 2 : 1) : 2));
+  let items = cats.flatMap(cat => shuffle(Object.keys(objects).filter(k => objects[k][1] === cat)).slice(0, level === 1 ? (cat === cats[0] ? 2 : 1) : level === 2 ? 2 : 3));
   items = shuffle(items);
   instruction(level === 3 ? 'Settu skrárnar í réttar möppur.' : 'Settu hlutina í rétta kassa.', 'Haltu músarhnappnum niðri, dragðu og slepptu. Eða smelltu á hlut og síðan á réttan stað.');
-  $('#surface').innerHTML = `<div class="sort-workbench" aria-label="Hlutir til að flokka">${items.map(key => `<button class="item" data-item="${key}" aria-pressed="false" aria-label="Velja ${objects[key][0]}">${img(key)}<span>${level === 3 ? ({ images: 'mynd', text: 'texti', sound: 'hljod' }[objects[key][1]]) + '-' + (items.indexOf(key) + 1) + ({ images: '.png', text: '.txt', sound: '.mp3' }[objects[key][1]]) : objects[key][0]}</span></button>`).join('')}</div><div class="bins">${cats.map(cat => `<button class="bin" data-cat="${cat}" aria-label="${level === 3 ? 'Mappa' : 'Kassi'}: ${names[cat]}">${img(level === 3 ? 'folder-' + cat : examples[cat])}<strong>${names[cat]}</strong><small class="bin-count">0 ${level === 3 ? 'skrár' : 'hlutir'}</small></button>`).join('')}</div>`;
+  $('#surface').innerHTML = `<div class="sort-workbench level-${level}" aria-label="Hlutir til að flokka">${items.map(key => `<button class="item" data-item="${key}" aria-pressed="false" aria-label="Velja ${objects[key][0]}">${img(key)}<span>${level === 3 ? ({ images: 'mynd', text: 'texti', sound: 'hljod' }[objects[key][1]]) + '-' + (items.indexOf(key) + 1) + ({ images: '.png', text: '.txt', sound: '.mp3' }[objects[key][1]]) : objects[key][0]}</span></button>`).join('')}</div><div class="bins bins-${cats.length}">${cats.map(cat => `<button class="bin" data-cat="${cat}" aria-label="${level === 3 ? 'Mappa' : 'Kassi'}: ${names[cat]}">${img(level === 3 ? 'folder-' + cat : examples[cat])}<strong>${names[cat]}</strong><small class="bin-count">0 ${level === 3 ? 'skrár' : 'hlutir'}</small></button>`).join('')}</div>`;
   const buttons = [...document.querySelectorAll('[data-item]')], bins = [...document.querySelectorAll('[data-cat]')];
   let selected = null, packed = new Set(), counts = {}, drag = null, suppressClick = false;
   function clearSelection() { selected = null; buttons.forEach(b => b.setAttribute('aria-pressed', 'false')); bins.forEach(b => b.classList.remove('hint', 'over')); }
@@ -85,11 +98,11 @@ function pack() {
   function put(bin) {
     if (!selected) { feedback('Veldu fyrst hlut sem þú vilt færa.'); return; }
     const b = selected, key = b.dataset.item;
-    if (objects[key][1] !== bin.dataset.cat) { feedback('Prófaðu hinn kassann. Þú getur þetta.', 'retry'); return; }
+    if (objects[key][1] !== bin.dataset.cat) { feedback('Prófaðu annan stað. Þú getur þetta.', 'retry'); return; }
     packed.add(key); b.classList.add('packed'); b.disabled = true; b.setAttribute('aria-label', objects[key][0] + ', komið á réttan stað');
     const cat = bin.dataset.cat; counts[cat] = (counts[cat] || 0) + 1; $('.bin-count', bin).textContent = counts[cat] + (level === 3 ? (counts[cat] === 1 ? ' skrá' : ' skrár') : (counts[cat] === 1 ? ' hlutur' : ' hlutir'));
     clearSelection(); chime();
-    if (packed.size === items.length) { feedback('Allt komið á réttan stað. Vel gert!', 'success'); nextButton(); $('#next').focus({ preventScroll: true }); }
+    if (packed.size === items.length) { feedback('Allt komið á réttan stað. Vel gert!', 'success'); autoAdvance(); }
     else { feedback(objects[key][0] + ' er á réttum stað!', 'success'); const next = buttons.find(el => !el.disabled); next?.focus({ preventScroll: true }); }
   }
   buttons.forEach(b => {
@@ -104,21 +117,22 @@ function pack() {
 }
 
 function treasure() {
-  const rowCount = settings.level === 1 ? 4 : settings.level === 2 ? 6 : 7;
+  const rowCount = settings.level === 1 ? 4 : settings.level === 2 ? 6 : 8;
+  const columns = settings.level === 1 ? 3 : settings.level === 2 ? 4 : 5;
   const all = shuffle(Object.keys(objects));
-  const rows = Array.from({ length: rowCount }, (_, r) => Array.from({ length: 3 }, (_, c) => ({ key: all[(r * 3 + c) % all.length], id: `r${r}c${c}`, row: r })));
-  const sequenceRows = [rowCount - 1, 0, rowCount - 2, 1, rowCount - 1, 0];
-  const targets = sequenceRows.map((r, i) => rows[r][i < 4 ? 0 : 1]);
+  const rows = Array.from({ length: rowCount }, (_, r) => Array.from({ length: columns }, (_, c) => ({ key: all[(r * columns + c) % all.length], id: `r${r}c${c}`, row: r, column: c })));
+  const visits = {};
+  const targets = Array.from({ length: sessionLength() }, (_, i) => { const row = i % 2 === 0 ? rowCount - 1 - (Math.floor(i / 2) % 2) : Math.floor(i / 2) % 2; const col = visits[row] || 0; visits[row] = col + 1; return rows[row][col]; });
   let target, locked = false;
-  $('#surface').innerHTML = `<div class="scroll-layout"><aside class="target-panel" id="target-panel" aria-label="Hluturinn sem á að finna"></aside><div><div class="scroll-window" id="scroll-window" tabindex="0" aria-label="Skrunaðu hér til að leita"><div class="shelves">${rows.map((items, r) => `<div class="shelf"><div class="shelf-label">${settings.level === 3 ? 'Skrár' : 'Hilla'} ${r + 1}</div>${items.map(o => `<button class="treasure-item" data-find="${o.id}" aria-label="${objects[o.key][0]}${settings.level === 3 ? ', ' + (r + 1) + '-' + (items.indexOf(o) + 1) : ''}">${img(o.key)}${settings.level === 1 ? '' : `<span>${objects[o.key][0]}${settings.level === 3 ? ' ' + (r + 1) + '-' + (items.indexOf(o) + 1) : ''}</span>`}</button>`).join('')}</div>`).join('')}</div></div><p class="scroll-tip" id="scroll-tip">Skrunaðu með músarhjóli, tveimur fingrum á snertifleti eða skrunstikunni.</p></div></div>`;
+  $('#surface').innerHTML = `<div class="scroll-layout"><aside class="target-panel" id="target-panel" aria-label="Hluturinn sem á að finna"></aside><div><div class="scroll-window" id="scroll-window" tabindex="0" aria-label="Skrunaðu hér til að leita"><div class="shelves level-${settings.level}">${rows.map((items, r) => `<div class="shelf" style="--columns:${columns}"><div class="shelf-label">${settings.level === 3 ? 'Skrár' : 'Hilla'} ${r + 1}</div>${items.map(o => `<button class="treasure-item" data-find="${o.id}" aria-label="${objects[o.key][0]}${settings.level === 3 ? ', ' + (r + 1) + '-' + (o.column + 1) : ''}">${img(o.key)}${settings.level === 1 ? '' : `<span>${objects[o.key][0]}${settings.level === 3 ? ' ' + (r + 1) + '-' + (o.column + 1) : ''}</span>`}</button>`).join('')}</div>`).join('')}</div></div><p class="scroll-tip" id="scroll-tip">Skrunaðu með músarhjóli, tveimur fingrum á snertifleti eða skrunstikunni.</p></div></div>`;
   const win = $('#scroll-window');
   function setTarget() {
     locked = false; target = targets[round];
-    instruction('Finndu: ' + objects[target.key][0] + (settings.level === 3 ? ' ' + (target.row + 1) + '-' + (Number(target.id.slice(-1)) + 1) : '') + '.', 'Skrunaðu inni í glugganum. Smelltu á hlutinn þegar þú finnur hann.');
-    $('#target-panel').innerHTML = `${img(target.key)}<div><p>Finndu þetta</p><strong>${objects[target.key][0]}${settings.level === 3 ? ' ' + (target.row + 1) + '-' + (Number(target.id.slice(-1)) + 1) : ''}</strong></div>`;
+    instruction('Finndu: ' + objects[target.key][0] + (settings.level === 3 ? ' ' + (target.row + 1) + '-' + (target.column + 1) : '') + '.', 'Skrunaðu inni í glugganum. Smelltu á hlutinn þegar þú finnur hann.');
+    $('#target-panel').innerHTML = `${img(target.key)}<div><p>Finndu þetta</p><strong>${objects[target.key][0]}${settings.level === 3 ? ' ' + (target.row + 1) + '-' + (target.column + 1) : ''}</strong></div>`;
     $('#next-area').innerHTML = ''; feedback('');
-    $('.steps').innerHTML = Array.from({ length: 6 }, (_, i) => `<span class="step ${i < round ? 'done' : i === round ? 'current' : ''}"></span>`).join('');
-    $('.steps').setAttribute('aria-label', `Verkefni ${round + 1} af 6`);
+    $('.steps').innerHTML = Array.from({ length: sessionLength() }, (_, i) => `<span class="step ${i < round ? 'done' : i === round ? 'current' : ''}"></span>`).join('');
+    $('.steps').setAttribute('aria-label', `Verkefni ${round + 1} af ${sessionLength()}`);
     updateHint();
   }
   function updateHint() {
@@ -131,7 +145,7 @@ function treasure() {
     if (locked) return;
     if (b.dataset.find !== target.id) { feedback('Þetta er annar hlutur. Leitaðu að myndinni til hliðar.', 'retry'); return; }
     locked = true; b.classList.add('found'); b.disabled = true; chime(); feedback('Þú fannst réttan hlut. Vel gert!', 'success');
-    nextButton(() => { round++; if (round === 6) complete(); else { setTarget(); $('#task-title').focus({ preventScroll: true }); } });
+    autoAdvance(() => { round++; if (round === sessionLength()) complete(); else { setTarget(); $('#task-title').focus({ preventScroll: true }); } });
   });
   setTarget();
 }
@@ -139,11 +153,11 @@ function treasure() {
 function robot() {
   const level = settings.level;
   const tasks = level === 1 ? [{ word: 'a' }, { word: 'm' }, { word: 's' }, { word: 'ó' }, { word: 'í' }, { word: 'r' }]
-    : level === 2 ? [{ word: 'sól' }, { word: 'mús' }, { word: 'hús' }, { word: 'api' }, { word: 'kisa' }, { word: 'mús', seed: 'músx' }]
-      : [{ word: 'Ég sé sól.' }, { word: 'Mús er lítil.' }, { word: 'Hér er hús.' }, { word: 'Ég á bók.' }, { word: 'Þetta er bíll.' }, { word: 'Ég sé sól.', seed: 'Ég sé sól.x' }];
+    : level === 2 ? [{ word: 'sól' }, { word: 'hús' }, { word: 'kisa' }, { word: 'bolti' }, { word: 'rauður' }, { word: 'bíll' }, { word: 'góð bók' }, { word: 'mús', seed: 'músx' }]
+      : [{ word: 'Ég sé sól.' }, { word: 'Mús er lítil.' }, { word: 'Hér er hús.' }, { word: 'Ég á góða bók.' }, { word: 'Þetta er rauður bíll.' }, { word: 'Hvar er boltinn?' }, { word: 'Ég sé þrjá kubba.' }, { word: 'Kisa sefur í rúmi.' }, { word: 'Við leikum saman.' }, { word: 'Ég sé sól.', seed: 'Ég sé sól.x' }];
   const task = tasks[round];
-  instruction(task.seed ? 'Lagaðu villuna og ýttu á Enter.' : level === 1 ? 'Skrifaðu stafinn.' : 'Skrifaðu það sem þú sérð.', task.seed ? 'Smelltu aftast í textann. Notaðu Backspace til að eyða x.' : 'Smelltu í reitinn. Skrifaðu og ýttu svo á Enter.');
-  $('#surface').innerHTML = `<div class="robot-layout"><div class="robot-mascot">${img('robot')}<p id="robot-message">Geturðu hjálpað mér?</p></div><form class="terminal" id="typing-form" novalidate><label for="type-input">${task.seed ? 'Svona á textinn að vera:' : 'Skrifaðu þetta:'}</label><div class="target-word" aria-label="${task.word}">${Array.from(task.word).map(c => `<span class="letter" aria-hidden="true">${c === ' ' ? '&nbsp;' : c}</span>`).join('')}</div><input class="type-input" id="type-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="keyboard-hint" aria-label="Skrifaðu hér" placeholder="Smelltu hér" maxlength="80"><p class="keyboard-hint" id="keyboard-hint">${settings.help ? 'Notaðu <kbd>Backspace</kbd> til að eyða og <kbd>Enter</kbd> til að staðfesta.' : 'Ýttu á Enter þegar þú ert búin/n.'}</p><button type="submit" class="sr-only" tabindex="-1">Athuga svar</button></form></div>`;
+  instruction(task.seed ? 'Lagaðu villuna.' : level === 1 ? 'Skrifaðu stafinn.' : 'Skrifaðu það sem þú sérð.', task.seed ? 'Notaðu Backspace til að eyða x. Síðan heldur leikurinn áfram.' : 'Smelltu í reitinn og skrifaðu. Leikurinn heldur sjálfkrafa áfram þegar svarið er rétt.');
+  $('#surface').innerHTML = `<div class="robot-layout"><div class="robot-mascot">${img('robot')}<p id="robot-message">Geturðu hjálpað mér?</p></div><form class="terminal" id="typing-form" novalidate><label for="type-input">${task.seed ? 'Svona á textinn að vera:' : 'Skrifaðu þetta:'}</label><div class="target-word" aria-label="${task.word}">${Array.from(task.word).map(c => `<span class="letter" aria-hidden="true">${c === ' ' ? '&nbsp;' : c}</span>`).join('')}</div><input class="type-input" id="type-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="keyboard-hint" aria-label="Skrifaðu hér" placeholder="Smelltu hér" maxlength="80"><p class="keyboard-hint" id="keyboard-hint">${settings.help ? 'Notaðu <kbd>Backspace</kbd> til að leiðrétta. ' : ''}Rétt svar fer sjálfkrafa í næsta verkefni.</p><button type="submit" class="sr-only" tabindex="-1">Athuga svar</button></form></div>`;
   const input = $('#type-input'); let solved = false;
   if (task.seed) input.value = task.seed;
   function normalized(s) { return level === 3 ? s.normalize('NFC') : s.normalize('NFC').toLocaleLowerCase('is'); }
@@ -151,13 +165,15 @@ function robot() {
     const typed = Array.from(normalized(input.value)), expected = Array.from(normalized(task.word));
     document.querySelectorAll('.letter').forEach((el, i) => el.classList.toggle('correct', settings.help && typed[i] === expected[i])); input.classList.remove('invalid');
   }
-  input.oninput = showLetters;
+  input.oninput = e => { showLetters(); if (!e.isComposing) checkAnswer(false); };
+  input.oncompositionend = () => { showLetters(); checkAnswer(false); };
   if (task.seed) showLetters();
-  $('#typing-form').onsubmit = e => {
-    e.preventDefault(); if (solved) return;
-    if (normalized(input.value) !== normalized(task.word)) { input.classList.add('invalid'); feedback('Skoðaðu fyrirmyndina. Þú mátt leiðrétta og prófa aftur.', 'retry'); return; }
-    solved = true; input.readOnly = true; $('#robot-message').textContent = 'Takk fyrir hjálpina!'; chime(); feedback('Rétt skrifað! Vel gert.', 'success'); nextButton(); $('#next').focus({ preventScroll: true });
-  };
+  function checkAnswer(showError) {
+    if (solved) return;
+    if (normalized(input.value) !== normalized(task.word)) { if (showError) { input.classList.add('invalid'); feedback('Skoðaðu fyrirmyndina. Þú mátt leiðrétta og prófa aftur.', 'retry'); } return; }
+    solved = true; input.readOnly = true; $('#robot-message').textContent = 'Takk fyrir hjálpina!'; chime(); feedback('Rétt skrifað! Vel gert.', 'success'); autoAdvance();
+  }
+  $('#typing-form').onsubmit = e => { e.preventDefault(); checkAnswer(true); };
 }
 
 $('#brand').onclick = () => home(true);

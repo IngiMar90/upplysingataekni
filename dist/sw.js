@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'tolvuleikir-v3';
+const CACHE = 'tolvuleikir-v4';
 const ASSETS = [
   "./",
   "./index.html",
@@ -12,9 +12,11 @@ const ASSETS = [
   "./assets/banana.svg",
   "./assets/blocks.svg",
   "./assets/brush.svg",
+  "./assets/car.svg",
   "./assets/carrot.svg",
   "./assets/cup.svg",
   "./assets/document.svg",
+  "./assets/duck.svg",
   "./assets/folder-images.svg",
   "./assets/folder-sound.svg",
   "./assets/folder-text.svg",
@@ -34,10 +36,13 @@ const ASSETS = [
   "./assets/pear.svg",
   "./assets/photo.svg",
   "./assets/portrait.svg",
+  "./assets/puzzle.svg",
   "./assets/robot.svg",
   "./assets/ruler.svg",
+  "./assets/speaker.svg",
   "./assets/star.svg",
   "./assets/teddy.svg",
+  "./assets/train.svg",
   "./assets/treasure.svg",
   "./assets/wrench.svg"
 ];
