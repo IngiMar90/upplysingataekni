@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'tolvuleikir-v10-guided-undo';
+const CACHE = 'tolvuleikir-v11-larger-undo-workspaces';
 const ASSETS = [
   "./",
   "./index.html",

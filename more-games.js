@@ -142,13 +142,15 @@ function undo() {
   $('#surface').innerHTML = `<div class="undo-lesson">
     <div class="undo-lesson-head"><strong id="undo-mode"></strong><span id="undo-demo-count"></span><button class="quiet" id="undo-demo">${t('Sýna mér aftur')}</button></div>
     <ol class="undo-plan">${lesson.actions.map((kind, i) => `<li data-undo-step="${i}"><span aria-hidden="true">${i + 1}</span>${actionLabels[kind]}</li>`).join('')}<li data-undo-step="${lesson.actions.length}"><span aria-hidden="true">↶</span>Ctrl + Z · ${t('Afturkalla')}</li></ol>
+    <div class="undo-support">
+    <div class="undo-guidance" id="undo-guidance" role="status"></div>
+    <div class="undo-keyboard" id="undo-keyboard" aria-keyshortcuts="Control+Z"><div><kbd id="undo-ctrl">Ctrl</kbd><b>+</b><kbd id="undo-z">Z</kbd><strong>↶ ${t('Afturkalla')}</strong></div><p>${undoHint}</p><small id="undo-count"></small></div>
+    <div class="undo-demo-controls" id="undo-demo-controls"><button class="secondary" id="undo-demo-next"></button><button class="primary" id="undo-try">${t('Ég prófa')}</button></div>
+    </div>
     <div class="undo-board"><section><h3>${t('Svona á myndin að vera')}</h3><div class="undo-stage reference-stage">${img(key)}</div></section><section><h3>${t('Vinnusvæðið þitt')}</h3><div class="undo-stage undo-editable" id="undo-stage" aria-label="${t('Vinnusvæði myndar')}">
       <div class="undo-origin" id="undo-origin" aria-hidden="true"></div><div class="undo-missing" id="undo-missing" hidden>${t('Myndinni var eytt. Ctrl + Z færir hana til baka.')}</div>
       <div class="undo-object" id="undo-object"><button class="undo-face" id="undo-face" aria-label="${t('Velja og færa: ')}${objects[key][0]}" aria-pressed="true">${img(key)}</button><button class="undo-resize" id="undo-resize" aria-label="${t('Breyta stærð: ')}${objects[key][0]}"></button></div><div class="undo-demo-pointer" id="undo-demo-pointer" aria-hidden="true">${pointerArt}</div>
     </div></section></div>
-    <div class="undo-guidance" id="undo-guidance" role="status"></div>
-    <div class="undo-keyboard" id="undo-keyboard" aria-keyshortcuts="Control+Z"><div><kbd id="undo-ctrl">Ctrl</kbd><b>+</b><kbd id="undo-z">Z</kbd><strong>↶ ${t('Afturkalla')}</strong></div><p>${undoHint}</p><small id="undo-count"></small></div>
-    <div class="undo-demo-controls" id="undo-demo-controls"><button class="secondary" id="undo-demo-next"></button><button class="primary" id="undo-try">${t('Ég prófa')}</button></div>
   </div>`;
   const stage = $('#undo-stage'), image = $('#undo-object'), face = $('#undo-face'), handle = $('#undo-resize');
   function drawPicture() {
