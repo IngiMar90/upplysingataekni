@@ -43,7 +43,7 @@ def svg(name, body, size=160):
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" fill="none"><title>{name}</title><g stroke="#42465e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">{body}</g></svg>'
 for name, body in art.items():
     (OUT / f'{name}.svg').write_text(svg(name, body))
-for category, item in [('images','photo'),('text','document'),('sound','music')]:
+for category, item in [('images','photo'),('text','document'),('sound','music'),('toys','ball'),('food','apple'),('tools','hammer')]:
     body = '<path d="M14 49q0-10 10-10h44l12 13h55q11 0 11 11v69q0 12-12 12H25q-11 0-11-12z" fill="#f7cf7c"/><path d="M16 64h129" stroke="#dba858"/>'
     body += '<g transform="translate(48 65) scale(.43)">' + art[item] + '</g>'
     (OUT/f'folder-{category}.svg').write_text(svg(category,body))
@@ -57,4 +57,11 @@ appbody = '<rect x="4" y="4" width="152" height="152" rx="39" fill="#5851b8" str
 (OUT/'app.svg').write_text(svg('Tölvuleikir',appbody))
 medal = '<path d="m42 90-17 56 34-14 21 19 8-60m30-1 17 56-34-14-21 19-8-60" fill="#a9a3e6"/><circle cx="80" cy="64" r="51" fill="#f5ca6c"/><circle cx="80" cy="64" r="39" fill="#ffe39b" stroke="#dfa749"/><path d="m60 64 13 14 28-30" fill="none" stroke="#7b6548" stroke-width="8"/>'
 (OUT/'medal.svg').write_text(svg('Vel gert',medal))
+doors = '<ellipse cx="130" cy="232" rx="88" ry="11" fill="#ead7c8" stroke="none"/><rect x="54" y="27" width="153" height="200" rx="17" fill="#f3d5a7"/><rect x="68" y="41" width="125" height="186" rx="8" fill="#3e6b70"/><g transform="translate(78 73) scale(.48)">'+art['star']+'</g><path d="m193 41-65 29v171l65-14z" fill="#eaa970"/><path d="m140 81 39-18v143l-39 13z" fill="#f5c38f"/><circle cx="146" cy="151" r="6" fill="#775957"/><path d="m34 167 42 28-21 5-10 20z" fill="#fff"/><path d="m53 200 10 19" stroke="#42465e" stroke-width="7"/>'
+picture = '<ellipse cx="130" cy="233" rx="93" ry="10" fill="#cddfed" stroke="none"/><rect x="33" y="48" width="185" height="157" rx="10" fill="#fff"/><rect x="47" y="62" width="157" height="117" rx="5" fill="#a9dcec"/><circle cx="170" cy="89" r="18" fill="#ffe19b"/><path d="m47 158 48-63 39 49 20-23 50 49v9H47z" fill="#76b59a"/><path d="m79 116 16-21 17 22-18-6z" fill="#fff"/><path d="M26 40h199v173H26z" fill="none" stroke="#7770c6" stroke-dasharray="7 7"/><rect x="18" y="32" width="16" height="16" rx="3" fill="#fff" stroke="#7770c6"/><rect x="217" y="32" width="16" height="16" rx="3" fill="#fff" stroke="#7770c6"/><rect x="18" y="205" width="16" height="16" rx="3" fill="#fff" stroke="#7770c6"/><rect x="213" y="201" width="24" height="24" rx="4" fill="#7770c6"/><path d="m204 191 33 32-15 1-5 13z" fill="#fff"/>'
+undo = '<ellipse cx="134" cy="231" rx="85" ry="10" fill="#dcd5ee" stroke="none"/><rect x="93" y="53" width="116" height="162" rx="13" fill="#fff"/><rect x="108" y="76" width="86" height="68" rx="6" fill="#b3ddec"/><circle cx="171" cy="95" r="11" fill="#ffda83"/><path d="m109 133 27-35 24 28 11-15 23 26v7h-85z" fill="#76b59a"/><path d="M111 164h79m-79 18h55" stroke="#adb6cf"/><path d="M201 52Q131-6 65 67" fill="none" stroke="#72b99d" stroke-width="22"/><path d="m39 42 2 57 58-12" fill="#72b99d" stroke="#42465e" stroke-width="4"/><path d="M54 181q-18-16-10-35" stroke="#b2a8dc" stroke-width="8" fill="none"/>'
+for name, body in [('doors', doors), ('picture', picture), ('undo', undo)]:
+    (OUT/f'{name}.svg').write_text(svg(name, body, 260))
+closed = '<rect x="22" y="7" width="116" height="146" rx="12" fill="#e8c398"/><rect x="32" y="17" width="96" height="136" rx="6" fill="#b5a1d9"/><circle cx="80" cy="63" r="31" fill="#f9f6ff"/><path d="M48 109h64v28H48z" fill="#cfc1e9"/><circle cx="116" cy="101" r="5" fill="#f7d081"/>'
+(OUT/'door-closed.svg').write_text(svg('Dyr', closed))
 print(f'Created {len(list(OUT.iterdir()))} original illustration assets.')

@@ -1,9 +1,11 @@
 'use strict';
-const CACHE = 'tolvuleikir-v4';
+const CACHE = 'tolvuleikir-v7';
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
+  "./game-logic.js",
+  "./more-games.js",
   "./app.js",
   "./manifest.webmanifest",
   "./assets/app.svg",
@@ -16,10 +18,15 @@ const ASSETS = [
   "./assets/carrot.svg",
   "./assets/cup.svg",
   "./assets/document.svg",
+  "./assets/door-closed.svg",
+  "./assets/doors.svg",
   "./assets/duck.svg",
+  "./assets/folder-food.svg",
   "./assets/folder-images.svg",
   "./assets/folder-sound.svg",
   "./assets/folder-text.svg",
+  "./assets/folder-tools.svg",
+  "./assets/folder-toys.svg",
   "./assets/hammer.svg",
   "./assets/headphones.svg",
   "./assets/icon-192.png",
@@ -35,6 +42,7 @@ const ASSETS = [
   "./assets/pack.svg",
   "./assets/pear.svg",
   "./assets/photo.svg",
+  "./assets/picture.svg",
   "./assets/portrait.svg",
   "./assets/puzzle.svg",
   "./assets/robot.svg",
@@ -44,6 +52,7 @@ const ASSETS = [
   "./assets/teddy.svg",
   "./assets/train.svg",
   "./assets/treasure.svg",
+  "./assets/undo.svg",
   "./assets/wrench.svg"
 ];
 self.addEventListener('install', event => {

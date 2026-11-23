@@ -12,7 +12,10 @@ const sessionLength = () => [6, 8, 10][settings.level - 1];
 const games = {
   pack: { name: 'Pakkasmiðjan', skill: 'Draga og sleppa', description: 'Settu hlutina á réttan stað.', tint: '#eef6ee', icon: 'pack', learned: 'Þú æfðir að velja hluti og færa þá á réttan stað.', bridge: 'Prófaðu með kennara: dragðu mynd inn á glæru í PowerPoint.' },
   treasure: { name: 'Fjársjóðsleit', skill: 'Skruna og finna', description: 'Skrunaðu og finndu fjársjóðinn.', tint: '#fff3df', icon: 'treasure', learned: 'Þú æfðir að skruna upp og niður og finna ákveðinn hlut.', bridge: 'Prófaðu með kennara: finndu mynd neðar á venjulegri vefsíðu.' },
-  robot: { name: 'Vélmennaritun', skill: 'Smella og skrifa', description: 'Hjálpaðu vélmenninu að skrifa.', tint: '#edf1ff', icon: 'robot', learned: 'Þú æfðir að smella í textareit og nota lyklaborðið.', bridge: 'Prófaðu með kennara: smelltu í textareit í Word og skrifaðu stutt orð.' }
+  robot: { name: 'Vélmennaritun', skill: 'Smella og skrifa', description: 'Hjálpaðu vélmenninu að skrifa.', tint: '#edf1ff', icon: 'robot', learned: 'Þú æfðir að smella í textareit og nota lyklaborðið.', bridge: 'Prófaðu með kennara: smelltu í textareit í Word og skrifaðu stutt orð.' },
+  doors: { name: 'Opnaðu réttu dyrnar', skill: 'Smella og opna', description: 'Finndu réttu dyrnar og opnaðu.', tint: '#fff0e8', icon: 'doors', learned: 'Þú æfðir að velja og opna tákn, möppur og skrár.', bridge: 'Prófaðu með kennara: veldu möppu og opnaðu hana í skráasafni tölvunnar.' },
+  picture: { name: 'Myndasmiðjan', skill: 'Færa og breyta stærð', description: 'Komdu myndunum í rétta ramma.', tint: '#eaf5fc', icon: 'picture', learned: 'Þú æfðir að velja mynd, færa hana og breyta stærð hennar.', bridge: 'Prófaðu með kennara: settu mynd á glæru og dragðu í horn hennar til að breyta stærðinni.' },
+  undo: { name: 'Lagaðu mistökin', skill: 'Afturkalla og laga', description: 'Færðu myndina aftur í rétt horf.', tint: '#f1edfb', icon: 'undo', learned: 'Þú æfðir að afturkalla breytingar og prófa aftur.', bridge: 'Prófaðu með kennara: færðu mynd í PowerPoint og notaðu Afturkalla eða Ctrl + Z til að færa hana til baka.' }
 };
 const objects = {
   apple: ['Epli', 'food'], pear: ['Pera', 'food'], banana: ['Banani', 'food'], carrot: ['Gulrót', 'food'],
@@ -46,8 +49,9 @@ function home(focus = false) {
   app.innerHTML = `<section class="hero"><p class="eyebrow">Lærum með leik</p><h1>Hvað viltu æfa í dag?</h1><p class="intro">Veldu leik. Taktu þér góðan tíma.</p><span class="pill mode">Stig ${settings.level} · ${['Fyrstu skref', 'Meiri æfing', 'Tölvufærni'][settings.level - 1]}</span></section><section class="cards" aria-label="Veldu leik">${Object.entries(games).map(([id, g]) => `<button class="game-card" data-game="${id}" style="--tint:${g.tint}"><div class="card-art">${img(g.icon)}</div><h2>${g.name}</h2><p>${g.description}</p><div class="card-bottom"><span class="play-circle" aria-hidden="true">▶</span>${g.skill}</div></button>`).join('')}</section><footer class="home-note"><span><i class="note-dot" aria-hidden="true"></i>Engin tímamörk. Alltaf hægt að prófa aftur.</span><span>${Object.values(progress).reduce((a, n) => a + (Number(n) || 0), 0)} loknar umferðir á þessari tölvu</span></footer>`;
   document.querySelectorAll('[data-game]').forEach(b => b.onclick = () => start(b.dataset.game));
   if (focus) $('[data-game]').focus();
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
-function start(id) { dispose(); current = id; round = 0; renderGame(); }
+function start(id) { dispose(); current = id; round = 0; renderGame(); window.scrollTo({ top: 0, behavior: 'instant' }); }
 function shell() {
   const g = games[current];
   document.body.classList.add('playing');
@@ -60,7 +64,7 @@ function instruction(title, detail) {
   if (settings.speech) speak(title + '. ' + detail);
 }
 function renderGame(keepTyping = false) {
-  dispose(); shell(); if (current === 'pack') pack(); else if (current === 'treasure') treasure(); else robot();
+  dispose(); shell(); ({ pack, treasure, robot, doors, picture, undo })[current]();
   if (keepTyping && current === 'robot') { const field = $('#type-input'); field.focus({ preventScroll: true }); field.setSelectionRange(field.value.length, field.value.length); }
   else $('#task-title').focus({ preventScroll: true });
 }
@@ -77,7 +81,7 @@ function autoAdvance(callback) {
 }
 function complete() {
   const id = current, g = games[id]; dispose(); document.body.classList.remove('playing'); progress[id] = (Number(progress[id]) || 0) + 1; persist('tolvuleikir-progress', progress);
-  app.innerHTML = `<section class="completion">${img('medal')}<p class="eyebrow">${sessionLength()} verkefni búin</p><h1 tabindex="-1">Vel gert!</h1><p>Þú laukst umferð í ${g.name === 'Pakkasmiðjan' ? 'Pakkasmiðjunni' : g.name === 'Fjársjóðsleit' ? 'Fjársjóðsleit' : 'Vélmennaritun'}.</p><div class="skill-card"><strong>${g.learned}</strong><p>${g.bridge}</p></div><div class="buttons"><button class="primary" id="again">Spila aftur</button><button class="secondary" id="choose">Velja annan leik</button></div></section>`;
+  app.innerHTML = `<section class="completion">${img('medal')}<p class="eyebrow">${sessionLength()} verkefni búin</p><h1 tabindex="-1">Vel gert!</h1><p>Þú laukst umferð í leiknum „${g.name}“.</p><div class="skill-card"><strong>${g.learned}</strong><p>${g.bridge}</p></div><div class="buttons"><button class="primary" id="again">Spila aftur</button><button class="secondary" id="choose">Velja annan leik</button></div></section>`;
   $('#again').onclick = () => start(id); $('#choose').onclick = () => home(true); $('h1', app).focus(); chime();
 }
 function shuffle(list) { const a = [...list]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }

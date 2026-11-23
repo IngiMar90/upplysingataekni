@@ -1,10 +1,14 @@
 # Tölvuleikir
 
-Þrír rólegir leikir á íslensku fyrir nemendur sem eru að byrja að læra tölvufærni. Engin innskráning, tímamörk, auglýsingar eða ytri gagnasöfnun.
+Sex rólegir leikir á íslensku fyrir nemendur sem eru að byrja að læra tölvufærni. Engin innskráning, tímamörk, auglýsingar eða ytri gagnasöfnun.
 
 - **Pakkasmiðjan:** draga og sleppa hlutum í kassa, eða velja hlut og smella á kassa. Á efsta stigi eru skrár færðar í möppur.
 - **Fjársjóðsleit:** raunverulegt skrun í afmörkuðum glugga, upp og niður, með músarhjóli, snertifleti, skrunstiku eða örvatökkum þegar glugginn hefur fókus.
 - **Vélmennaritun:** smella í textareit, skrifa stafi, orð og setningar, leiðrétta með Backspace og halda sjálfkrafa áfram við rétt svar. Enter má einnig nota til að athuga svar.
+
+- **Opnaðu réttu dyrnar:** einn smellur á stórar dyr á stigi 1, tvísmellir á sex möppur á stigi 2 og tveggja skrefa leit að möppu og skrá á stigi 3. Enter opnar líka valið tákn.
+- **Myndasmiðjan:** færa eina mynd í ramma, breyta stærð hennar og loks raða þremur myndum í ramma. Raunverulegt hornhandfang breytir stærð, með Minna/Stærra hnöppum og örvatökkum sem viðbótarstuðningi.
+- **Lagaðu mistökin:** prófa breytingu og afturkalla á stigi 1; tvær eða þrjár breytingar til baka á stigum 2 og 3. Breytingasaga styður einnig Endurgera, Ctrl+Z og Ctrl+Y.
 
 Umferðir hafa 6 verkefni á stigi 1, 8 á stigi 2 og 10 á stigi 3. Rétt svar sýnist í eina sekúndu og síðan kemur næsta verkefni sjálfkrafa; í ritun þarf hvorki Enter né sérstakan næsta-hnapp. Textareitur heldur fókus milli ritunarverkefna. Skipti bíða meðan stillingagluggi er opinn og falla niður þegar farið er heim eða leik skipt.
 

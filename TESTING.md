@@ -20,3 +20,12 @@ Static hosting uses only local assets. No external analytics, accounts or API ca
 - Full ten-task level 3 typing session automatically completed, including capital letters, punctuation, spaces and final Backspace correction.
 - Confirmed six sorting objects on level 2 and nine on level 3; treasure counts are 24 on level 2 and 40 on level 3. Treasure automatically advances while retaining scroll position.
 - Re-ran offline-cache and manifest verification with all new assets included.
+
+## Update: six games
+
+- Browser: all six illustrated home cards inspected.
+- Doors: full six-task level 1 session with automatic progression; level 3 single-click selection, double-click opening of folder, then double-click opening of the correct file and automatic progression.
+- Picture editor: actual pointer drag completed level 1; actual corner-handle resize plus pointer drag completed level 2; all three level 3 pictures resized and moved into their frames with automatic progression.
+- Undo: full six-task level 1 session; level 3 three-step undo, Ctrl+Z, redo, and progression verified.
+- `node test-game-logic.cjs`: history snapshot isolation, undo/redo ordering, branching after a new edit, no-op edits, reachability of all editor goals across every round, size and identity matching, and canvas bounds.
+- `node verify.mjs`: all 53 offline resources, including new game scripts and illustrations.
