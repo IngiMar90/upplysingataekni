@@ -29,3 +29,10 @@ Static hosting uses only local assets. No external analytics, accounts or API ca
 - Undo: full six-task level 1 session; level 3 three-step undo, Ctrl+Z, redo, and progression verified.
 - `node test-game-logic.cjs`: history snapshot isolation, undo/redo ordering, branching after a new edit, no-op edits, reachability of all editor goals across every round, size and identity matching, and canvas bounds.
 - `node verify.mjs`: all 53 offline resources, including new game scripts and illustrations.
+
+## Installed-app identity repair
+
+- Separate root-relative identities, start URLs and scopes for `/upplysingataekni/` and `/ondun/`; neither resolves to the shared origin root.
+- Games cache reads restricted to the current games cache; requests outside the games folder are not intercepted.
+- Tests preserve unrelated breathing-cache entries during games cache cleanup.
+- Cross-app manifest and breathing-worker checks verify distinct identities and that breathing does not intercept game requests.

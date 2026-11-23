@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'tolvuleikir-v7';
+const CACHE = 'tolvuleikir-v8-app-identity';
 const ASSETS = [
   "./",
   "./index.html",
@@ -63,10 +63,11 @@ self.addEventListener('activate', event => {
 });
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
+  const scope = new URL(self.registration.scope);
+  if (event.request.method !== 'GET' || url.origin !== self.location.origin || !url.pathname.startsWith(scope.pathname)) return;
   if (event.request.mode === 'navigate') {
-    event.respondWith(caches.match('./index.html').then(cached => cached || fetch(event.request)));
+    event.respondWith(caches.open(CACHE).then(cache => cache.match(new URL('index.html', scope).href)).then(cached => cached || fetch(event.request)));
     return;
   }
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request)));
+  event.respondWith(caches.open(CACHE).then(cache => cache.match(event.request)).then(cached => cached || fetch(event.request)));
 });

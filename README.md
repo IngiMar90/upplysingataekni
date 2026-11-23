@@ -33,3 +33,7 @@ Sjá `TESTING.md` fyrir prófanir og takmarkanir fyrstu útgáfu.
 ## Vefhýsing
 
 Opinberi leikurinn er á https://ingimar90.github.io/upplysingataekni/ og er birtur með GitHub Pages frá `gh-pages` greininni, rót (`/`). `main` geymir þróunarkóðann. Við uppfærslur þarf að birta innihald `dist/` í rót `gh-pages` og halda skráarskipaninni óbreyttri. GitHub byggir og birtir þá grein sjálfkrafa. Eldri chatgpt.site slóðin er ekki lengur aðalhlekkur verkefnisins.
+
+## Aðskilin uppsett öpp
+
+Manifest-auðkenni, upphafsslóð og umfang Tölvuleikja eru `/upplysingataekni/`. Auðkennið er rótartengt og má ekki vera `./` eða `/`: þau deila annars auðkenni með öðrum öppum á sama léni. Öndun hefur sitt eigið auðkenni `/ondun/`. Þjónustuþráður Tölvuleikja les aðeins eigið skyndiminni og afgreiðir engar beiðnir utan eigin möppu. `node verify.mjs` prófar þessi mörk. Við hýsingu undir annarri slóð þarf að aðlaga manifest-stillingarnar sérstaklega.
