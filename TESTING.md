@@ -36,3 +36,13 @@ Static hosting uses only local assets. No external analytics, accounts or API ca
 - Games cache reads restricted to the current games cache; requests outside the games folder are not intercepted.
 - Tests preserve unrelated breathing-cache entries during games cache cleanup.
 - Cross-app manifest and breathing-worker checks verify distinct identities and that breathing does not intercept game requests.
+
+## Icelandic, English and Polish
+
+- `node test-i18n.cjs`: 239 UI translation keys in all three languages, language-specific word banks for every level, correction targets, valid/invalid saved language, blocked storage, Polish plural forms.
+- `node verify.mjs`: 54 offline assets including the full translation script; distinct app identity and isolation from the breathing app remain verified. Existing game-logic tests and syntax checks pass.
+- Browser: all three language selectors, localized home cards and Polish teacher settings inspected. English level 3 instructions and object/folder/file labels rendered in all six games.
+- Browser: Polish level 3 typing advanced automatically from task 1 to task 2. The on-screen ł button inserted the correct character at the text cursor; completing the word advanced to task 3. Switching to English retained task 3 and level 3 and changed its typing target.
+- Browser: reload retained English and the selected level. A complete six-task English level 1 typing session advanced without Enter. The completion screen switched to Polish, and progress remained exactly one completed round after returning home.
+- Polish speech availability accurately reported that no matching voice was installed in the test browser. Actual audible speech requires a corresponding system voice on the student's device.
+- Pages deployment for commit b9c649b8146270b9b3536e31939809f1b13c0ea5 succeeded; published site verified in Chrome. Closing all old game windows allowed the offline update to activate.
