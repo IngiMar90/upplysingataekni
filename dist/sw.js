@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'tolvuleikir-v8-app-identity';
+const CACHE = 'tolvuleikir-v9-three-languages';
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const ASSETS = [
   "./game-logic.js",
   "./more-games.js",
   "./app.js",
+  "./i18n.js",
   "./manifest.webmanifest",
   "./assets/app.svg",
   "./assets/apple.svg",

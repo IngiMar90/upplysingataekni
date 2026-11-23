@@ -1,6 +1,6 @@
 # Tölvuleikir
 
-Sex rólegir leikir á íslensku fyrir nemendur sem eru að byrja að læra tölvufærni. Engin innskráning, tímamörk, auglýsingar eða ytri gagnasöfnun.
+Sex rólegir leikir á íslensku, ensku og pólsku fyrir nemendur sem eru að byrja að læra tölvufærni. Engin innskráning, tímamörk, auglýsingar eða ytri gagnasöfnun.
 
 - **Pakkasmiðjan:** draga og sleppa hlutum í kassa, eða velja hlut og smella á kassa. Á efsta stigi eru skrár færðar í möppur.
 - **Fjársjóðsleit:** raunverulegt skrun í afmörkuðum glugga, upp og niður, með músarhjóli, snertifleti, skrunstiku eða örvatökkum þegar glugginn hefur fókus.
@@ -12,7 +12,7 @@ Sex rólegir leikir á íslensku fyrir nemendur sem eru að byrja að læra töl
 
 Umferðir hafa 6 verkefni á stigi 1, 8 á stigi 2 og 10 á stigi 3. Rétt svar sýnist í eina sekúndu og síðan kemur næsta verkefni sjálfkrafa; í ritun þarf hvorki Enter né sérstakan næsta-hnapp. Textareitur heldur fókus milli ritunarverkefna. Skipti bíða meðan stillingagluggi er opinn og falla niður þegar farið er heim eða leik skipt.
 
-Pakkasmiðjan sýnir 3, 6 eða 9 hluti eftir stigi; á stigum 2 og 3 eru þrír flokkar. Fjársjóðsleit sýnir 12, 24 eða 40 hluti. Á stigi 3 eru endurteknar myndir auðkenndar með númerum og réttur hlutur þarf að passa bæði mynd og númer. Ritun fer úr stökum stöfum í orð, orðasambönd og setningar með hástöfum, bilum og greinarmerkjum. Kennarastillingar bjóða þrjú stig, sjónræna aðstoð, hljóð og valfrjálsan íslenskan upplestur ef íslensk kerfisrödd er í boði. Nöfn og svör eru ekki vistuð; aðeins stillingar og fjöldi lokinna umferða í localStorage á viðkomandi tæki. Stillingar eru ekki læstar með lykilorði.
+Pakkasmiðjan sýnir 3, 6 eða 9 hluti eftir stigi; á stigum 2 og 3 eru þrír flokkar. Fjársjóðsleit sýnir 12, 24 eða 40 hluti. Á stigi 3 eru endurteknar myndir auðkenndar með númerum og réttur hlutur þarf að passa bæði mynd og númer. Ritun fer úr stökum stöfum í orð, orðasambönd og setningar með hástöfum, bilum og greinarmerkjum. Kennarastillingar bjóða þrjú stig, sjónræna aðstoð, hljóð og valfrjálsan upplestur á völdu tungumáli ef samsvarandi kerfisrödd er í boði. Nöfn og svör eru ekki vistuð; aðeins stillingar og fjöldi lokinna umferða í localStorage á viðkomandi tæki. Stillingar eru ekki læstar með lykilorði.
 
 ## Uppsetning og skjáfylling
 
@@ -37,3 +37,11 @@ Opinberi leikurinn er á https://ingimar90.github.io/upplysingataekni/ og er bir
 ## Aðskilin uppsett öpp
 
 Manifest-auðkenni, upphafsslóð og umfang Tölvuleikja eru `/upplysingataekni/`. Auðkennið er rótartengt og má ekki vera `./` eða `/`: þau deila annars auðkenni með öðrum öppum á sama léni. Öndun hefur sitt eigið auðkenni `/ondun/`. Þjónustuþráður Tölvuleikja les aðeins eigið skyndiminni og afgreiðir engar beiðnir utan eigin möppu. `node verify.mjs` prófar þessi mörk. Við hýsingu undir annarri slóð þarf að aðlaga manifest-stillingarnar sérstaklega.
+
+## Tungumál
+
+Þrír flipar efst velja íslensku, ensku eða pólsku. Allir sex leikirnir, fyrirmæli, heiti hluta og mappa, endurgjöf, aðgengisheiti, stillingar og uppsetningarleiðbeiningar fylgja valinu. Ritunarleikurinn hefur sjálfstæða stafa-, orða- og setningabanka á hverju tungumáli. Pólskir sérstafir sem koma fyrir í verkefni eru einnig tiltækir sem litlir stafatakkar fyrir nemendur með annað lyklaborð.
+
+Tungumál vistast aðeins á tækinu í `tolvuleikir-language`; framvinda og kennarastillingar haldast við tungumálaskipti. Skipti innan leiks endurræsa núverandi verkefni á sama stigi og verkefnanúmeri. Lokaskjár má skipta um tungumál án þess að skrá lokna umferð aftur. `html.lang`, titill og upplestur fylgja tungumáli. Nöfn tungumálaflipanna eru alltaf á eigin tungumáli.
+
+`dist/i18n.js` geymir allar þýðingar og orðabanka staðbundið og er í offline-skyndiminni. `node test-i18n.cjs` athugar þýðingalykla, tungumálageymslu, orðabanka, leiðréttingarverkefni og pólskar fleirtölur. Engu er breytt í `ondun`.

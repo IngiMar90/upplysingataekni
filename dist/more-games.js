@@ -3,9 +3,9 @@
 function doors() {
   const level = settings.level;
   const folders = [
-    { id: 'images', name: 'Myndir', example: 'photo' }, { id: 'toys', name: 'Leikföng', example: 'ball' },
-    { id: 'text', name: 'Textar', example: 'document' }, { id: 'food', name: 'Matur', example: 'apple' },
-    { id: 'sound', name: 'Hljóð', example: 'music' }, { id: 'tools', name: 'Verkfæri', example: 'hammer' }
+    { id: 'images', name: t("Myndir"), example: 'photo' }, { id: 'toys', name: t("Leikföng"), example: 'ball' },
+    { id: 'text', name: t("Textar"), example: 'document' }, { id: 'food', name: t("Matur"), example: 'apple' },
+    { id: 'sound', name: t("Hljóð"), example: 'music' }, { id: 'tools', name: t("Verkfæri"), example: 'hammer' }
   ];
   const easyKeys = ['ball', 'duck', 'car', 'apple', 'teddy', 'train', 'kite', 'blocks'];
   const targetKey = easyKeys[round % easyKeys.length];
@@ -15,37 +15,37 @@ function doors() {
   const files = Array.from({ length: 6 }, (_, i) => ({ id: 'file-' + i, key: pool[i % pool.length], name: objects[pool[i % pool.length]][0] + '-' + (i + 1) + extension }));
   const targetFile = files[round % files.length];
   let stage = 'folders', solved = false;
-  const detail = level === 1 ? 'Smelltu einu sinni á dyrnar með réttu myndinni.' : 'Tvísmelltu til að opna. Þú mátt líka velja tákn og ýta á Enter.';
-  instruction(level === 1 ? 'Opnaðu dyrnar með réttu myndinni.' : level === 2 ? 'Opnaðu möppuna: ' + folder.name + '.' : 'Opnaðu: ' + folder.name + ' / ' + targetFile.name, detail);
-  $('#surface').innerHTML = `<div class="open-game"><aside class="open-target">${img(level === 1 ? targetKey : level === 2 ? 'folder-' + folder.id : targetFile.key)}<div><small>${level === 1 ? 'Finndu þessa mynd' : level === 2 ? 'Finndu þessa möppu' : 'Finndu þessa skrá'}</small><strong>${level === 1 ? objects[targetKey][0] : level === 2 ? folder.name : targetFile.name}</strong>${level === 3 ? '<span>Í möppunni ' + folder.name + '</span>' : ''}</div></aside><section class="open-desktop"><div class="open-path" id="open-path"></div><div class="open-grid" id="open-grid"></div><p class="open-tip">${detail}</p></section></div>`;
+  const detail = level === 1 ? t("Smelltu einu sinni á dyrnar með réttu myndinni.") : t("Tvísmelltu til að opna. Þú mátt líka velja tákn og ýta á Enter.");
+  instruction(level === 1 ? t("Opnaðu dyrnar með réttu myndinni.") : level === 2 ? t("Opnaðu möppuna: ") + folder.name + '.' : t("Opnaðu: ") + folder.name + ' / ' + targetFile.name, detail);
+  $('#surface').innerHTML = `<div class="open-game"><aside class="open-target">${img(level === 1 ? targetKey : level === 2 ? 'folder-' + folder.id : targetFile.key)}<div><small>${level === 1 ? t("Finndu þessa mynd") : level === 2 ? t("Finndu þessa möppu") : t("Finndu þessa skrá")}</small><strong>${level === 1 ? objects[targetKey][0] : level === 2 ? folder.name : targetFile.name}</strong>${level === 3 ? ("<span>" + t("Í möppunni ")) + folder.name + "</span>" : ''}</div></aside><section class="open-desktop"><div class="open-path" id="open-path"></div><div class="open-grid" id="open-grid"></div><p class="open-tip">${detail}</p></section></div>`;
   function win(button) {
     if (solved) return; solved = true; button.classList.add('opened');
     $('#open-grid').querySelectorAll('button').forEach(b => { b.disabled = true; });
-    chime(); feedback(level === 1 ? 'Réttar dyr! Vel gert.' : 'Þú opnaðir rétt. Vel gert!', 'success'); autoAdvance();
+    chime(); feedback(level === 1 ? t("Réttar dyr! Vel gert.") : t("Þú opnaðir rétt. Vel gert!"), 'success'); autoAdvance();
   }
   function draw() {
     const grid = $('#open-grid');
-    $('#open-path').innerHTML = level === 1 ? '<span>Veldu réttu dyrnar</span>' : stage === 'files' ? '<button class="quiet" id="open-back">Til baka</button><span>Tölvan / ' + folder.name + '</span>' : '<span>Tölvan</span>';
+    $('#open-path').innerHTML = level === 1 ? ("<span>" + t("Veldu réttu dyrnar") + "</span>") : stage === 'files' ? ("<button class=\"quiet\" id=\"open-back\">" + t("Til baka") + "</button><span>" + t("Tölvan / ")) + folder.name + "</span>" : ("<span>" + t("Tölvan") + "</span>");
     if ($('#open-back')) $('#open-back').onclick = () => { if (!solved) { stage = 'folders'; feedback(''); draw(); } };
     let choices;
     if (level === 1) choices = shuffle([targetKey, ...shuffle(easyKeys.filter(k => k !== targetKey)).slice(0, 2)]).map(key => ({ id: key, key, name: objects[key][0], right: key === targetKey }));
     else if (stage === 'files') choices = shuffle(files).map(file => ({ ...file, right: file.id === targetFile.id }));
     else choices = shuffle(level === 2 ? folders : folders.filter(f => f.id !== 'food')).map(f => ({ id: f.id, key: 'folder-' + f.id, name: f.name, right: f.id === folder.id }));
     grid.className = 'open-grid ' + (level === 1 ? 'door-grid' : 'folder-grid');
-    grid.innerHTML = choices.map(choice => `<button class="open-choice ${level === 1 ? 'door-choice' : ''}" data-open="${choice.id}" aria-label="${level === 1 ? 'Dyr: ' : stage === 'files' ? 'Skrá: ' : 'Mappa: '}${choice.name}">${level === 1 ? '<span class="door-art">' + img('door-closed') + img(choice.key, 'door-window') + '</span>' : img(choice.key)}<strong>${choice.name}</strong></button>`).join('');
+    grid.innerHTML = choices.map(choice => `<button class="open-choice ${level === 1 ? 'door-choice' : ''}" data-open="${choice.id}" aria-label="${level === 1 ? t("Dyr: ") : stage === 'files' ? t("Skrá: ") : t("Mappa: ")}${choice.name}">${level === 1 ? "<span class=\"door-art\">" + img('door-closed') + img(choice.key, 'door-window') + "</span>" : img(choice.key)}<strong>${choice.name}</strong></button>`).join('');
     choices.forEach(choice => {
       const button = $(`[data-open="${choice.id}"]`);
       const open = () => {
         if (solved) return;
-        if (!choice.right) { feedback('Þetta er annað tákn. Skoðaðu fyrirmyndina og prófaðu aftur.', 'retry'); return; }
-        if (level === 3 && stage === 'folders') { stage = 'files'; feedback('Rétt mappa. Finndu nú skrána ' + targetFile.name + '.', 'success'); draw(); $('#open-back').focus({ preventScroll: true }); }
+        if (!choice.right) { feedback(t("Þetta er annað tákn. Skoðaðu fyrirmyndina og prófaðu aftur."), 'retry'); return; }
+        if (level === 3 && stage === 'folders') { stage = 'files'; feedback(t("Rétt mappa. Finndu nú skrána ") + targetFile.name + '.', 'success'); draw(); $('#open-back').focus({ preventScroll: true }); }
         else win(button);
       };
       button.onclick = () => {
         if (solved) return;
         if (level === 1) { open(); return; }
         grid.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-        button.classList.add('selected'); feedback('Tákn valið. Tvísmelltu eða ýttu á Enter til að opna.');
+        button.classList.add('selected'); feedback(t("Tákn valið. Tvísmelltu eða ýttu á Enter til að opna."));
       };
       if (level > 1) button.ondblclick = open;
       button.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); open(); } };
@@ -58,8 +58,8 @@ function picture() {
   const level = settings.level, task = GameTools.editorTask(level, round);
   const pieces = task.pieces.map(p => ({ ...p, done: false }));
   let selected = level === 1 ? 0 : null, gesture = null, solved = false;
-  instruction(level === 1 ? 'Færðu myndina í rammann.' : level === 2 ? 'Láttu myndina passa í rammann.' : 'Láttu allar myndirnar passa í rammana.', level === 1 ? 'Haltu músarhnappnum niðri og dragðu myndina.' : 'Veldu mynd. Færðu hana og dragðu í hornið til að breyta stærð.');
-  $('#surface').innerHTML = `<div class="editor-toolbar"><span id="editor-selected">${level === 1 ? 'Dragðu myndina' : 'Veldu mynd til að byrja'}</span>${level > 1 ? '<div><button class="quiet" id="picture-smaller" disabled>− Minna</button><button class="quiet" id="picture-bigger" disabled>+ Stærra</button></div>' : ''}<span class="editor-count" id="editor-count">0 / ${pieces.length}</span></div><div class="editor-scroll"><div class="editor-canvas" id="editor-canvas" aria-label="Myndasvæði">${task.goals.map((goal, i) => `<div class="picture-goal" data-goal="${i}" aria-label="Rammi fyrir ${objects[goal.key][0]}">${img(goal.key)}<span class="goal-check" aria-hidden="true">✓</span></div>`).join('')}${pieces.map((piece, i) => `<div class="picture-piece" data-piece="${i}"><button class="picture-face" data-face="${i}" aria-label="Velja og færa: ${objects[piece.key][0]}" aria-pressed="false">${img(piece.key)}</button>${level > 1 ? '<button class="resize-handle" data-resize="' + i + '" aria-label="Breyta stærð: ' + objects[piece.key][0] + '" title="Dragðu hornið til að breyta stærð"></button>' : ''}</div>`).join('')}</div></div><p class="editor-hint">${level === 1 ? 'Einnig má velja myndina og nota örvatakkana.' : 'Dragðu hornið eða notaðu Minna / Stærra. Örvatakkar færa valda mynd.'}</p>`;
+  instruction(level === 1 ? t("Færðu myndina í rammann.") : level === 2 ? t("Láttu myndina passa í rammann.") : t("Láttu allar myndirnar passa í rammana."), level === 1 ? t("Haltu músarhnappnum niðri og dragðu myndina.") : t("Veldu mynd. Færðu hana og dragðu í hornið til að breyta stærð."));
+  $('#surface').innerHTML = `<div class="editor-toolbar"><span id="editor-selected">${level === 1 ? t("Dragðu myndina") : t("Veldu mynd til að byrja")}</span>${level > 1 ? ("<div><button class=\"quiet\" id=\"picture-smaller\" disabled>− " + t("Minna") + "</button><button class=\"quiet\" id=\"picture-bigger\" disabled>+ " + t("Stærra") + "</button></div>") : ''}<span class="editor-count" id="editor-count">0 / ${pieces.length}</span></div><div class="editor-scroll"><div class="editor-canvas" id="editor-canvas" aria-label="${t("Myndasvæði")}">${task.goals.map((goal, i) => `<div class="picture-goal" data-goal="${i}" aria-label="${t("Rammi fyrir ")}${objects[goal.key][0]}">${img(goal.key)}<span class="goal-check" aria-hidden="true">✓</span></div>`).join('')}${pieces.map((piece, i) => `<div class="picture-piece" data-piece="${i}"><button class="picture-face" data-face="${i}" aria-label="${t("Velja og færa: ")}${objects[piece.key][0]}" aria-pressed="false">${img(piece.key)}</button>${level > 1 ? "<button class=\"resize-handle\" data-resize=\"" + i + '" aria-label="' + t('Breyta stærð: ') + objects[piece.key][0] + ("\" title=\"" + t("Dragðu hornið til að breyta stærð") + "\"></button>") : ''}</div>`).join('')}</div></div><p class="editor-hint">${level === 1 ? t("Einnig má velja myndina og nota örvatakkana.") : t("Dragðu hornið eða notaðu Minna / Stærra. Örvatakkar færa valda mynd.")}</p>`;
   const canvas = $('#editor-canvas');
   const position = (el, item) => { el.style.left = item.x / 10 + '%'; el.style.top = item.y / 4.3 + '%'; el.style.width = item.size / 10 + '%'; el.style.height = item.size / 4.3 + '%'; };
   task.goals.forEach((goal, i) => position($(`[data-goal="${i}"]`), goal));
@@ -72,7 +72,7 @@ function picture() {
       $(`[data-goal="${i}"]`).classList.toggle('matched', piece.done);
       $(`[data-goal="${i}"]`).classList.toggle('active', settings.help && selected === i && !piece.done);
     });
-    $('#editor-selected').textContent = selected === null ? 'Veldu mynd til að byrja' : 'Valin mynd: ' + objects[pieces[selected].key][0];
+    $('#editor-selected').textContent = selected === null ? t("Veldu mynd til að byrja") : t("Valin mynd: ") + objects[pieces[selected].key][0];
     $('#editor-count').textContent = pieces.filter(p => p.done).length + ' / ' + pieces.length;
     if (level > 1) { $('#picture-smaller').disabled = selected === null || solved || pieces[selected].done; $('#picture-bigger').disabled = selected === null || solved || pieces[selected].done; }
   }
@@ -81,8 +81,8 @@ function picture() {
     if (solved || pieces[i].done) return;
     if (!GameTools.fits(pieces[i], task.goals[i], level)) return;
     pieces[i] = { ...task.goals[i], done: true }; chime();
-    if (pieces.every(p => p.done)) { solved = true; feedback('Myndirnar passa! Vel gert.', 'success'); }
-    else { feedback('Myndin passar. Prófaðu næstu mynd.', 'success'); selected = pieces.findIndex(p => !p.done); }
+    if (pieces.every(p => p.done)) { solved = true; feedback(t("Myndirnar passa! Vel gert."), 'success'); }
+    else { feedback(t("Myndin passar. Prófaðu næstu mynd."), 'success'); selected = pieces.findIndex(p => !p.done); }
     draw(); if (solved) autoAdvance();
   }
   function begin(e, i, mode) {
@@ -121,31 +121,31 @@ function undo() {
   const level = settings.level, key = ['ball', 'duck', 'car', 'teddy', 'kite', 'blocks', 'train', 'apple'][round % 8];
   const initial = { x: 50, y: 50, size: 150, visible: true };
   const history = new GameTools.DrawingHistory(initial);
-  const actionNames = { hide: 'Fela mynd', move: 'Færa mynd', shrink: 'Minnka mynd' };
+  const actionNames = { hide: t("Fela mynd"), move: t("Færa mynd"), shrink: t("Minnka mynd") };
   const firstAction = ['hide', 'move', 'shrink'][round % 3];
   let started = level > 1, solved = false;
   const transform = (kind, state) => kind === 'hide' ? { ...state, visible: false } : kind === 'move' ? { ...state, x: state.x === 50 ? 72 : 50, y: state.y === 50 ? 30 : 50 } : { ...state, size: state.size === 150 ? 85 : 150 };
   if (level === 2) ['move', round % 2 ? 'hide' : 'shrink'].forEach(kind => history.apply(transform(kind, history.state)));
   if (level === 3) ['move', 'shrink', 'hide'].forEach(kind => history.apply(transform(kind, history.state)));
-  instruction(level === 1 ? 'Prófaðu: ' + actionNames[firstAction] + '.' : 'Lagaðu myndina með Afturkalla.', level === 1 ? 'Síðan færðu myndina til baka með Afturkalla.' : 'Afturkalla færir eina breytingu til baka í einu. Þú mátt líka nota Ctrl + Z.');
-  $('#surface').innerHTML = `<div class="undo-workshop"><div class="undo-board"><section><h3>Svona á myndin að vera</h3><div class="undo-stage reference-stage">${img(key)}</div></section><section><h3>Svona er myndin núna</h3><div class="undo-stage" id="undo-stage"><span class="undo-missing" id="undo-missing" hidden>Myndin er falin</span><div class="undo-object" id="undo-object">${img(key)}</div></div></section></div><div class="undo-toolbar"><div class="undo-history"><button class="primary" id="do-undo" disabled>↶ Afturkalla</button>${level > 1 ? '<button class="secondary" id="do-redo" disabled>↷ Endurgera</button>' : ''}</div><span class="undo-count" id="undo-count"></span><div class="undo-experiments">${(level === 1 ? [firstAction] : ['move', 'shrink', 'hide']).map(kind => `<button class="quiet" data-change="${kind}">${actionNames[kind]}</button>`).join('')}</div></div><p class="editor-hint">${level === 1 ? 'Það er í lagi að prófa. Afturkalla hjálpar þér að laga.' : '<kbd>Ctrl</kbd> + <kbd>Z</kbd> afturkallar. <kbd>Ctrl</kbd> + <kbd>Y</kbd> endurgerir.'}</p></div>`;
+  instruction(level === 1 ? t("Prófaðu: ") + actionNames[firstAction] + '.' : t("Lagaðu myndina með Afturkalla."), level === 1 ? t("Síðan færðu myndina til baka með Afturkalla.") : t("Afturkalla færir eina breytingu til baka í einu. Þú mátt líka nota Ctrl + Z."));
+  $('#surface').innerHTML = `<div class="undo-workshop"><div class="undo-board"><section><h3>${t("Svona á myndin að vera")}</h3><div class="undo-stage reference-stage">${img(key)}</div></section><section><h3>${t("Svona er myndin núna")}</h3><div class="undo-stage" id="undo-stage"><span class="undo-missing" id="undo-missing" hidden>${t("Myndin er falin")}</span><div class="undo-object" id="undo-object">${img(key)}</div></div></section></div><div class="undo-toolbar"><div class="undo-history"><button class="primary" id="do-undo" disabled>↶ ${t("Afturkalla")}</button>${level > 1 ? ("<button class=\"secondary\" id=\"do-redo\" disabled>↷ " + t("Endurgera") + "</button>") : ''}</div><span class="undo-count" id="undo-count"></span><div class="undo-experiments">${(level === 1 ? [firstAction] : ['move', 'shrink', 'hide']).map(kind => `<button class="quiet" data-change="${kind}">${actionNames[kind]}</button>`).join('')}</div></div><p class="editor-hint">${level === 1 ? t("Það er í lagi að prófa. Afturkalla hjálpar þér að laga.") : ("<kbd>Ctrl</kbd> + <kbd>Z</kbd>" + t(" afturkallar. ") + "<kbd>Ctrl</kbd> + <kbd>Y</kbd>" + t(" endurgerir."))}</p></div>`;
   function draw() {
     const state = history.state, image = $('#undo-object'); image.hidden = !state.visible; image.style.left = state.x + '%'; image.style.top = state.y + '%'; image.style.width = state.size + 'px'; image.style.height = state.size + 'px'; $('#undo-missing').hidden = state.visible;
     $('#do-undo').disabled = solved || !history.past.length; if ($('#do-redo')) $('#do-redo').disabled = solved || !history.future.length;
     document.querySelectorAll('[data-change]').forEach(b => { b.disabled = solved || (level === 1 && started); });
-    $('#undo-count').textContent = history.past.length ? history.past.length + (history.past.length === 1 ? ' breyting til baka' : ' breytingar til baka') : started ? 'Myndin er í réttu horfi' : 'Prófaðu breytinguna';
+    $('#undo-count').textContent = history.past.length ? I18n.count("changes", history.past.length) : started ? t("Myndin er í réttu horfi") : t("Prófaðu breytinguna");
     if (settings.help) $('#do-undo').classList.toggle('suggested', !solved && history.past.length > 0);
   }
   function check() {
     if (!started || solved || !GameTools.same(history.state, initial)) return;
-    solved = true; chime(); feedback('Þú lagaðir myndina. Vel gert!', 'success'); draw(); autoAdvance();
+    solved = true; chime(); feedback(t("Þú lagaðir myndina. Vel gert!"), 'success'); draw(); autoAdvance();
   }
   document.querySelectorAll('[data-change]').forEach(button => { button.onclick = () => {
     if (solved) return;
-    if (history.apply(transform(button.dataset.change, history.state))) { started = true; instruction('Lagaðu myndina með Afturkalla.', 'Afturkalla færir síðustu breytingu til baka.'); feedback('Myndin breyttist. Nú geturðu afturkallað.'); draw(); }
+    if (history.apply(transform(button.dataset.change, history.state))) { started = true; instruction(t("Lagaðu myndina með Afturkalla."), t("Afturkalla færir síðustu breytingu til baka.")); feedback(t("Myndin breyttist. Nú geturðu afturkallað.")); draw(); }
   }; });
-  function goBack() { if (solved || !history.undo()) return; draw(); check(); if (!solved) feedback('Ein breyting fór til baka. Haltu áfram.', 'success'); }
-  function goForward() { if (solved || !history.redo()) return; draw(); feedback('Breytingin var endurgerð. Þú getur afturkallað hana aftur.'); }
+  function goBack() { if (solved || !history.undo()) return; draw(); check(); if (!solved) feedback(t("Ein breyting fór til baka. Haltu áfram."), 'success'); }
+  function goForward() { if (solved || !history.redo()) return; draw(); feedback(t("Breytingin var endurgerð. Þú getur afturkallað hana aftur.")); }
   $('#do-undo').onclick = goBack; if ($('#do-redo')) $('#do-redo').onclick = goForward;
   listen(document, 'keydown', e => {
     if ($('dialog[open]') || (!e.ctrlKey && !e.metaKey) || ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;

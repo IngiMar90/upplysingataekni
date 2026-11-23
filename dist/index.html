@@ -2,14 +2,19 @@
 <html lang="is">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#5851b8"><meta name="description" content="Sex rólegir leikir sem æfa tölvufærni, músarstjórn, skrun, ritun og myndvinnslu. Á íslensku, án innskráningar.">
+  <meta name="theme-color" content="#5851b8"><meta name="description" content="Sex rólegir leikir sem æfa tölvufærni, músarstjórn, skrun, ritun og myndvinnslu. Á íslensku, ensku og pólsku, án innskráningar.">
   <title>Tölvuleikir · Lærum með leik</title>
   <link rel="icon" href="assets/app.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="assets/icon-192.png">
-  <link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css"><script src="game-logic.js" defer></script><script src="more-games.js" defer></script><script src="app.js" defer></script>
+  <link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css"><script src="i18n.js" defer></script><script src="game-logic.js" defer></script><script src="more-games.js" defer></script><script src="app.js" defer></script>
 </head>
 <body>
   <header class="topbar">
     <button class="brand" id="brand" aria-label="Tölvuleikir, heim"><img src="assets/app.svg" alt=""><span>Tölvuleikir</span></button>
+    <div class="language-tabs" role="group" aria-label="Tungumál">
+      <button type="button" data-language="is" lang="is" aria-pressed="true">Íslenska</button>
+      <button type="button" data-language="en" lang="en" aria-pressed="false">English</button>
+      <button type="button" data-language="pl" lang="pl" aria-pressed="false">Polski</button>
+    </div>
     <nav aria-label="Stýringar"><button class="quiet" id="install">Setja upp</button><button class="quiet" id="fullscreen">⛶ <span>Fylla skjá</span></button><button class="icon-button" id="settings" aria-label="Stillingar kennara" title="Stillingar kennara">⚙</button></nav>
   </header>
   <main id="app"></main>
