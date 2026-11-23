@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#5851b8"><meta name="description" content="Þrír rólegir leikir sem æfa músarstjórn, skrun og ritun. Á íslensku, án innskráningar.">
+  <title>Tölvuleikir · Lærum með leik</title>
+  <link rel="icon" href="assets/app.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" id="brand" aria-label="Tölvuleikir, heim"><img src="assets/app.svg" alt=""><span>Tölvuleikir</span></button>
+    <nav aria-label="Stýringar"><button class="quiet" id="install">Setja upp</button><button class="quiet" id="fullscreen">⛶ <span>Fylla skjá</span></button><button class="icon-button" id="settings" aria-label="Stillingar kennara" title="Stillingar kennara">⚙</button></nav>
+  </header>
+  <main id="app"></main>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <form method="dialog"><div class="dialog-head"><h2 id="settings-title">Stillingar kennara</h2><button class="icon-button" aria-label="Loka">×</button></div></form>
+    <p>Veldu aðstoð sem hentar nemandanum. Stillingar gilda fyrir alla þrjá leikina.</p>
+    <fieldset><legend>Færnistig</legend><div class="level-choices">
+      <label><input type="radio" name="level" value="1"><span><b>1 · Fyrstu skref</b><small>Stórir hlutir, fáir valkostir og mikill stuðningur.</small></span></label>
+      <label><input type="radio" name="level" value="2"><span><b>2 · Meiri æfing</b><small>Fleiri hlutir, lengra skrun og stutt orð.</small></span></label>
+      <label><input type="radio" name="level" value="3"><span><b>3 · Tölvufærni</b><small>Skrár og möppur, upplýsingaleit og ritun.</small></span></label>
+    </div></fieldset>
+    <label class="toggle"><input type="checkbox" id="help-setting"> Sjónrænar vísbendingar</label>
+    <label class="toggle"><input type="checkbox" id="sound-setting"> Hljóð við rétt svar</label>
+    <label class="toggle"><input type="checkbox" id="speech-setting"> Lesa fyrirmæli sjálfkrafa</label>
+    <p class="small" id="voice-status"></p>
+    <p class="small">Engin innskráning. Stillingar og fjöldi lokinna umferða vistast aðeins í þessum vafra. Engum nöfnum eða svörum er safnað.</p>
+    <div class="dialog-actions"><button class="quiet" id="reset-progress">Núllstilla framvindu</button><button class="primary" id="save-settings">Vista stillingar</button></div>
+    <p class="small" id="settings-status" role="status"></p>
+  </dialog>
+  <dialog id="install-dialog" aria-labelledby="install-title"><form method="dialog"><div class="dialog-head"><h2 id="install-title">Tölvuleikir sem app</h2><button class="icon-button" aria-label="Loka">×</button></div></form><div id="install-content"></div><p class="small">Á skólatölvum getur þurft heimild kerfisstjóra til að setja upp app. Einnig er hægt að spila beint í vafra og velja „Fylla skjá“. Esc lokar skjáfyllingu.</p></dialog>
+  <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+</body></html>
