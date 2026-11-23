@@ -1,11 +1,11 @@
 {
-  "id": "./",
+  "id": "/upplysingataekni/",
   "name": "Tölvuleikir – Lærum með leik",
   "short_name": "Tölvuleikir",
   "description": "Sex leikir sem æfa tölvufærni: músarstjórn, skrun, ritun, möppur, myndvinnsla og afturköllun.",
   "lang": "is",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/upplysingataekni/",
+  "scope": "/upplysingataekni/",
   "display": "standalone",
   "display_override": [
     "fullscreen",
