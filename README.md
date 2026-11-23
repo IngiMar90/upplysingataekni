@@ -12,7 +12,7 @@ Pakkasmiðjan sýnir 3, 6 eða 9 hluti eftir stigi; á stigum 2 og 3 eru þrír 
 
 ## Uppsetning og skjáfylling
 
-Opna [Tölvuleiki](https://tolvuleikir-ingi.xalzir.chatgpt.site/) í Chrome eða Edge og velja **Setja upp**, eða nota uppsetningu í valmynd vafrans. Uppsetning getur verið takmörkuð af skólastillingum. Appið opnast án hefðbundinnar veffangastiku og óskar eftir skjáfylltri birtingu þar sem hún er studd. **Fylla skjá** felur aðra hluti meðan spilað er; **Esc** hættir skjáfyllingu. Þetta er ekki læstur prófhamur eða kiosk mode.
+Opna [Tölvuleiki](https://ingimar90.github.io/upplysingataekni/) í Chrome eða Edge og velja **Setja upp**, eða nota uppsetningu í valmynd vafrans. Uppsetning getur verið takmörkuð af skólastillingum. Appið opnast án hefðbundinnar veffangastiku og óskar eftir skjáfylltri birtingu þar sem hún er studd. **Fylla skjá** felur aðra hluti meðan spilað er; **Esc** hættir skjáfyllingu. Þetta er ekki læstur prófhamur eða kiosk mode.
 
 Service worker sækir leikina og allar myndir við fyrstu opnun yfir HTTPS. Þegar niðurhali er lokið virka þeir án nets. Uppfærslur taka gildi þegar eldri opnum gluggum appsins hefur verið lokað. Upplestur fer eftir röddum á tækinu og getur þurft nettengingu eftir kerfi.
 
@@ -25,3 +25,7 @@ Staðbundið: `python3 -m http.server 8000 --directory dist`, síðan opna `http
 Allar SVG myndir og tákn voru teiknuð sérstaklega fyrir verkefnið. `python3 make_assets.py` endurgerir SVG skrárnar; PNG uppsetningartáknin eru 192×192 og 512×512 útgáfur af `dist/assets/app.svg`. Eftir breytingar þarf að endurgera PNG táknin og uppfæra útgáfu og skráalista í `dist/sw.js`.
 
 Sjá `TESTING.md` fyrir prófanir og takmarkanir fyrstu útgáfu.
+
+## Vefhýsing
+
+Opinberi leikurinn er á https://ingimar90.github.io/upplysingataekni/ og er birtur með GitHub Pages frá `gh-pages` greininni, rót (`/`). `main` geymir þróunarkóðann. Við uppfærslur þarf að birta innihald `dist/` í rót `gh-pages` og halda skráarskipaninni óbreyttri. GitHub byggir og birtir þá grein sjálfkrafa. Eldri chatgpt.site slóðin er ekki lengur aðalhlekkur verkefnisins.
