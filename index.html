@@ -2,10 +2,10 @@
 <html lang="is">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#5851b8"><meta name="description" content="Þrír rólegir leikir sem æfa músarstjórn, skrun og ritun. Á íslensku, án innskráningar.">
+  <meta name="theme-color" content="#5851b8"><meta name="description" content="Sex rólegir leikir sem æfa tölvufærni, músarstjórn, skrun, ritun og myndvinnslu. Á íslensku, án innskráningar.">
   <title>Tölvuleikir · Lærum með leik</title>
   <link rel="icon" href="assets/app.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="assets/icon-192.png">
-  <link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
+  <link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css"><script src="game-logic.js" defer></script><script src="more-games.js" defer></script><script src="app.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -15,7 +15,7 @@
   <main id="app"></main>
   <dialog id="settings-dialog" aria-labelledby="settings-title">
     <form method="dialog"><div class="dialog-head"><h2 id="settings-title">Stillingar kennara</h2><button class="icon-button" aria-label="Loka">×</button></div></form>
-    <p>Veldu aðstoð sem hentar nemandanum. Stillingar gilda fyrir alla þrjá leikina.</p>
+    <p>Veldu aðstoð sem hentar nemandanum. Stillingar gilda fyrir alla sex leikina.</p>
     <fieldset><legend>Færnistig</legend><div class="level-choices">
       <label><input type="radio" name="level" value="1"><span><b>1 · Fyrstu skref</b><small>Stórir hlutir, fáir valkostir og mikill stuðningur.</small></span></label>
       <label><input type="radio" name="level" value="2"><span><b>2 · Meiri æfing</b><small>Fleiri hlutir, lengra skrun og stutt orð.</small></span></label>
