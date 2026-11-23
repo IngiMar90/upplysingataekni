@@ -46,3 +46,13 @@ Static hosting uses only local assets. No external analytics, accounts or API ca
 - Browser: reload retained English and the selected level. A complete six-task English level 1 typing session advanced without Enter. The completion screen switched to Polish, and progress remained exactly one completed round after returning home.
 - Polish speech availability accurately reported that no matching voice was installed in the test browser. Actual audible speech requires a corresponding system voice on the student's device.
 - Pages deployment for commit b9c649b8146270b9b3536e31939809f1b13c0ea5 succeeded; published site verified in Chrome. Closing all old game windows allowed the offline update to activate.
+
+## Guided Ctrl + Z lessons and direct editing
+
+- Unit tests cover pristine starts at all three levels; edits are never pre-applied. One completed gesture creates one history entry, small jitter and wrong action types do not count, early undo cannot skip required edits, and all required undo steps restore the exact original state. Responsive bounds keep moved and resized pictures inside the canvas.
+- Existing picture-editor and DrawingHistory tests pass. Translation coverage now includes 254 UI keys across Icelandic, English and Polish. Offline tests verify that all 54 resources are installed with cache reload requests and that cache/app identity boundaries are preserved.
+- Browser: level 1 demonstration shows a move and its reversal with highlighted Ctrl + Z keys while task progress remains 1 of 6. Actual pointer dragging followed by actual Ctrl + Z restores the picture and automatically advances to task 2.
+- Browser: level 2 arrow-key movement and actual corner-handle pointer resizing produce exactly two undo entries. Reopening the demonstration preserves the first edit. The first Ctrl + Z restores size while retaining the moved position; the second restores the original position and automatically advances.
+- Browser: level 3 Polish demonstration moves, resizes, deletes and then restores the picture in three reverse steps without changing task progress. In practice, direct movement and resizing followed by the actual Delete key create three changes. Three actual Ctrl + Z keypresses restore visibility, size and position in order, then advance to task 2.
+- English, Polish and Icelandic demonstration text, keyboard guidance and feedback inspected. Icelandic desktop layout visually inspected with instructions, sample picture, workspace and keyboard guidance visible together. Native touch input and school-managed Chromebook keyboard behavior remain device-level checks.
+- GitHub Pages deployment d263e976189c6e85e6acd14da4ae785798b6473b succeeded. Browser tab left on the Icelandic level 1 demonstration.
