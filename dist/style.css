@@ -32,11 +32,18 @@
 .undo-guidance{margin:12px 0;font-size:.88rem;line-height:1.5;font-weight:650;text-align:center;min-height:1.5em;color:#484061}.undo-keyboard{display:flex;align-items:center;gap:15px;flex-wrap:wrap;border:2px solid #d9d7e9;background:white;border-radius:15px;padding:12px 16px}.undo-keyboard.active{border-color:#8c7bc4;background:#f1edff}.undo-keyboard>div{display:flex;align-items:center;gap:9px;flex-shrink:0}.undo-keyboard kbd{min-width:43px;min-height:40px;display:grid;place-items:center;font-size:1.1rem;font-weight:750}.undo-keyboard kbd.pressed{background:#6551ac;border-color:#483581;color:#fff;transform:translateY(2px)}.undo-keyboard strong{font-size:.88rem;color:var(--purple)}.undo-keyboard p{flex:1;min-width:200px;font-size:.8rem;line-height:1.5;margin:0;color:#4c4d68}.undo-keyboard small{font-size:.76rem;color:var(--muted)}.undo-demo-controls{display:flex;justify-content:center;gap:13px;margin-top:15px}.undo-demo-controls button{min-height:48px;font-size:.9rem;padding:10px 22px}
 @media(min-width:681px) and (max-height:820px){.undo-lesson{padding:12px 16px}.undo-lesson .undo-stage{height:180px}.undo-plan{margin-bottom:10px}.undo-plan li{padding:7px 10px}.undo-guidance{margin:8px 0;font-size:.8rem}.undo-keyboard{padding:9px 13px}.undo-demo-controls{margin-top:10px}.undo-lesson-head{margin-bottom:8px}}
 @media(max-width:680px){.undo-lesson{padding:12px}.undo-lesson .undo-board{grid-template-columns:1fr;gap:12px}.undo-lesson .reference-stage{height:90px}.undo-lesson .reference-stage>img{width:65px;height:65px}.undo-lesson .undo-editable{height:220px}.undo-plan li{min-width:130px}.undo-lesson-head{flex-wrap:wrap}.undo-keyboard{gap:10px}.undo-keyboard p{min-width:100%;font-size:.8rem}.undo-demo-controls{flex-wrap:wrap}.undo-demo-controls button{flex:1}.undo-lesson .undo-board>section:first-child{display:flex;align-items:center;gap:12px}.undo-lesson .undo-board>section:first-child h3{flex:1}.undo-lesson .reference-stage{width:100px;flex-shrink:0}}
-@media(min-width:681px){
- .undo-lesson{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(260px,1fr);column-gap:18px;row-gap:12px;align-items:start}
- .undo-lesson-head,.undo-plan{grid-column:1/-1;margin-bottom:0}.undo-lesson .undo-board{grid-column:1;grid-row:3/6;min-width:0}
- .undo-guidance{grid-column:2;grid-row:3;margin:0;min-height:0;text-align:left;font-size:.82rem}
- .undo-keyboard{grid-column:2;grid-row:4;gap:9px;padding:13px}.undo-keyboard>div{flex-wrap:wrap;gap:7px}.undo-keyboard p{min-width:100%;font-size:.78rem}.undo-keyboard small{width:100%}
- .undo-demo-controls{grid-column:2;grid-row:5;margin:0;flex-wrap:wrap;gap:8px}.undo-demo-controls button{font-size:.8rem;padding:10px 12px;flex:1;min-width:100px}
-}
-@media(min-width:681px) and (max-width:1000px){.undo-lesson{grid-template-columns:minmax(0,1fr) 250px;column-gap:12px}.undo-lesson .undo-board{grid-template-columns:100px minmax(0,1fr);gap:10px}.undo-lesson .reference-stage>img{width:70px;height:70px}}
+/* Instructions precede both full-width workspaces in visual and reading order. */
+.undo-lesson{display:flex;flex-direction:column;gap:14px}
+.undo-lesson-head,.undo-plan{margin-bottom:0}
+.undo-support{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,1.7fr) auto;gap:14px;align-items:center;width:100%}
+.undo-guidance{margin:0;text-align:left;min-height:0;font-size:.85rem}
+.undo-keyboard{gap:10px;padding:11px 14px;min-width:0}
+.undo-keyboard>div{flex-wrap:wrap;gap:7px}.undo-keyboard p{min-width:150px;font-size:.78rem}.undo-keyboard small:empty{display:none}
+.undo-demo-controls{margin:0;flex-direction:column;gap:8px}.undo-demo-controls button{font-size:.8rem;padding:10px 15px;min-width:155px;min-height:44px}
+.undo-lesson .undo-board{width:100%;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:22px}
+.undo-lesson .undo-board>section{min-width:0}
+.undo-lesson .undo-stage{height:clamp(260px,36vh,360px)}
+.undo-resize{width:40px;height:40px;right:-5px;bottom:-5px}
+@media(min-width:681px) and (max-height:820px){.undo-lesson{gap:10px}.undo-lesson .undo-stage{height:clamp(240px,36vh,300px)}.undo-plan{margin:0}}
+@media(min-width:681px) and (max-width:1000px){.undo-support{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}.undo-demo-controls{grid-column:1/-1;flex-direction:row;justify-content:flex-end}.undo-lesson .undo-board{gap:16px}}
+@media(max-width:680px){.undo-support{display:flex;flex-direction:column;align-items:stretch;gap:12px}.undo-keyboard p{min-width:100%}.undo-demo-controls{flex-direction:row;flex-wrap:wrap}.undo-demo-controls button{flex:1;min-width:120px}.undo-lesson .undo-board{grid-template-columns:1fr;gap:14px}.undo-lesson .reference-stage{height:90px}.undo-lesson .undo-editable{height:clamp(280px,45vh,380px)}}
