@@ -56,3 +56,12 @@ Static hosting uses only local assets. No external analytics, accounts or API ca
 - Browser: level 3 Polish demonstration moves, resizes, deletes and then restores the picture in three reverse steps without changing task progress. In practice, direct movement and resizing followed by the actual Delete key create three changes. Three actual Ctrl + Z keypresses restore visibility, size and position in order, then advance to task 2.
 - English, Polish and Icelandic demonstration text, keyboard guidance and feedback inspected. Icelandic desktop layout visually inspected with instructions, sample picture, workspace and keyboard guidance visible together. Native touch input and school-managed Chromebook keyboard behavior remain device-level checks.
 - GitHub Pages deployment d263e976189c6e85e6acd14da4ae785798b6473b succeeded. Browser tab left on the Icelandic level 1 demonstration.
+
+## Level 3 update: move, resize, move again
+
+This update replaces the former Delete exercise on level 3. The student now moves the picture, resizes it and moves it again. Demo frames show two distinct positions, retain visibility, and reverse all three changes.
+
+- Updated UndoLesson tests verify that the second move creates a third entry, Delete is rejected, the first undo returns to the resized snapshot, and three undos restore the original picture. Level 1 and 2 tests continue to pass. Translation-key and offline-cache checks pass.
+- Browser: verified three changed demonstration frames with positions 72%/38%, 72%/38% at 78px, then 38%/65% at 78px.
+- Browser: performed move, resize, move using the direct-edit keyboard alternatives. Three actual Ctrl + Z keypresses restored the second move, size, then first move. Task progress remained 1 of 10 until the third undo, then automatically advanced to task 2.
+- Pages deployment 6ea78b42316b15b8a2fd882ea7a09b85aaf53211 succeeded.
