@@ -16,9 +16,10 @@ const handlers = {}, deleted = [], cached = [];
 let claimed = false;
 const context = {
   URL,
+  Request: class { constructor(url, options) { this.url = url; this.cache = options.cache; } },
   self: { registration: {scope: 'https://example.test/upplysingataekni/'}, location: {origin: 'https://example.test'}, clients: {claim: async () => {claimed = true;}}, addEventListener: (type, handler) => {handlers[type] = handler;} },
   caches: {
-    open: async name => {assert.equal(name, currentCache);return {addAll: async assets => {for (const asset of assets) {assert(existsSync('dist/' + (asset === './' ? 'index.html' : asset.slice(2))), asset);cached.push(asset);}},match: async request => ({offline: true, request, cache: name})};},
+    open: async name => {assert.equal(name, currentCache);return {addAll: async assets => {for (const request of assets) {assert.equal(request.cache, 'reload');const asset = request.url;assert(existsSync('dist/' + (asset === './' ? 'index.html' : asset.slice(2))), asset);cached.push(asset);}},match: async request => ({offline: true, request, cache: name})};},
     keys: async () => ['tolvuleikir-v0', currentCache, 'ondun-v14-app-identity', 'other-app'],
     delete: async key => {deleted.push(key);},
     match: async () => {throw new Error('Cross-app cache lookup must never be used');}

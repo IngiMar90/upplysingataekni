@@ -993,6 +993,154 @@ const I18n = (() => {
   "Smelltu á staf ef hann er ekki á lyklaborðinu.": [
     "Click a letter if it is not on your keyboard.",
     "Kliknij literę, jeśli nie ma jej na klawiaturze."
+  ],
+  "Færðu myndina á annan stað.": [
+    "Move the picture to another place.",
+    "Przesuń obrazek w inne miejsce."
+  ],
+  "Dragðu hornið til að breyta stærð.": [
+    "Drag the corner to resize the picture.",
+    "Przeciągnij róg, aby zmienić rozmiar obrazka."
+  ],
+  "Veldu myndina og ýttu á Delete.": [
+    "Select the picture and press Delete.",
+    "Wybierz obrazek i naciśnij Delete."
+  ],
+  "Haltu músarhnappnum niðri á myndinni, dragðu hana og slepptu. Örvatakkar geta líka fært myndina.": [
+    "Hold the mouse button on the picture, drag it and release. You can also use the arrow keys to move it.",
+    "Przytrzymaj przycisk myszy na obrazku, przeciągnij go i puść. Możesz też przesuwać obrazek strzałkami."
+  ],
+  "Haltu litla horninu niðri og dragðu til að stækka eða minnka myndina. Örvatakkar á horninu virka líka.": [
+    "Hold and drag the little corner to make the picture bigger or smaller. You can also focus the corner and use the arrow keys.",
+    "Przytrzymaj i przeciągnij mały róg, aby powiększyć lub zmniejszyć obrazek. Możesz też wybrać róg i użyć strzałek."
+  ],
+  "Smelltu á myndina og ýttu á Delete á lyklaborðinu. Á Chromebook má nota Alt + Backspace.": [
+    "Click the picture and press Delete on the keyboard. On a Chromebook you can use Alt + Backspace.",
+    "Kliknij obrazek i naciśnij Delete na klawiaturze. Na Chromebooku możesz użyć Alt + Backspace."
+  ],
+  "Haltu Ctrl niðri og ýttu á Z til að afturkalla. Slepptu síðan báðum tökkunum.": [
+    "Hold Ctrl and press Z to undo. Then release both keys.",
+    "Przytrzymaj Ctrl i naciśnij Z, aby cofnąć zmianę. Potem puść oba klawisze."
+  ],
+  "Sýna mér aftur": [
+    "Show me again",
+    "Pokaż mi jeszcze raz"
+  ],
+  "Vinnusvæðið þitt": [
+    "Your workspace",
+    "Twój obszar pracy"
+  ],
+  "Vinnusvæði myndar": [
+    "Picture workspace",
+    "Obszar pracy z obrazkiem"
+  ],
+  "Myndinni var eytt. Ctrl + Z færir hana til baka.": [
+    "The picture was deleted. Ctrl + Z brings it back.",
+    "Obrazek został usunięty. Ctrl + Z go przywróci."
+  ],
+  "Sýnikennsla – horfðu fyrst": [
+    "Demonstration – watch first",
+    "Pokaz – najpierw popatrz"
+  ],
+  "Nú er komið að þér": [
+    "Now it is your turn",
+    "Teraz twoja kolej"
+  ],
+  "Sýna aftur": [
+    "Show again",
+    "Pokaż ponownie"
+  ],
+  "Næsta sýniskref": [
+    "Next demonstration step",
+    "Następny krok pokazu"
+  ],
+  "Ég prófa": [
+    "Let me try",
+    "Teraz spróbuję"
+  ],
+  "Sýnikennsla: breyttu og afturkallaðu með Ctrl + Z.": [
+    "Demonstration: change the picture and undo with Ctrl + Z.",
+    "Pokaz: zmień obrazek i cofnij zmianę klawiszami Ctrl + Z."
+  ],
+  "Fyrst er myndin óbreytt. Horfðu á breytingarnar, eina í einu.": [
+    "First the picture is unchanged. Watch the changes, one at a time.",
+    "Na początku obrazek jest bez zmian. Zobacz zmiany, jedną po drugiej."
+  ],
+  "Ctrl + Z hefur fært myndina aftur eins og hún var. Nú mátt þú prófa.": [
+    "Ctrl + Z has restored the picture. Now you can try.",
+    "Ctrl + Z przywróciło obrazek. Teraz możesz spróbować."
+  ],
+  "Ctrl + Z afturkallar síðustu breytinguna. Ýttu aftur til að fara eitt skref lengra til baka.": [
+    "Ctrl + Z undoes the last change. Press it again to go back one more step.",
+    "Ctrl + Z cofa ostatnią zmianę. Naciśnij ponownie, aby cofnąć kolejną zmianę."
+  ],
+  "Veldu Næsta sýniskref til að sjá hvað gerist.": [
+    "Choose Next demonstration step to see what happens.",
+    "Wybierz Następny krok pokazu, aby zobaczyć, co się stanie."
+  ],
+  "Ctrl + Z · Afturkalla síðustu breytingu": [
+    "Ctrl + Z · Undo the last change",
+    "Ctrl + Z · Cofnij ostatnią zmianę"
+  ],
+  "Ýttu á Ctrl + Z til að laga myndina.": [
+    "Press Ctrl + Z to restore the picture.",
+    "Naciśnij Ctrl + Z, aby przywrócić obrazek."
+  ],
+  "Síðan notarðu Ctrl + Z til að afturkalla.": [
+    "Then use Ctrl + Z to undo.",
+    "Potem użyj Ctrl + Z, aby cofnąć zmianę."
+  ],
+  "Þú lagaðir myndina með Ctrl + Z. Vel gert!": [
+    "You restored the picture with Ctrl + Z. Well done!",
+    "Obrazek jest przywrócony dzięki Ctrl + Z. Brawo!"
+  ],
+  "Breytingarnar eru þínar. Færðu þær til baka með Ctrl + Z.": [
+    "You made the changes. Undo them with Ctrl + Z.",
+    "To twoje zmiany. Cofnij je klawiszami Ctrl + Z."
+  ],
+  "Gerðu breytinguna sjálf/ur á myndinni.": [
+    "Make the change to the picture yourself.",
+    "Samodzielnie zmień obrazek."
+  ],
+  "Myndin er óbreytt.": [
+    "The picture is unchanged.",
+    "Obrazek jest bez zmian."
+  ],
+  "Nú skaltu ýta á Ctrl + Z.": [
+    "Now press Ctrl + Z.",
+    "Teraz naciśnij Ctrl + Z."
+  ],
+  "Breyting skráð. Prófaðu næsta skref.": [
+    "Change saved. Try the next step.",
+    "Zmiana zapisana. Spróbuj następnego kroku."
+  ],
+  "Dragðu aðeins lengra til að breyta myndinni. Prófaðu aftur.": [
+    "Drag a little further to change the picture. Try again.",
+    "Przeciągnij trochę dalej, aby zmienić obrazek. Spróbuj ponownie."
+  ],
+  "Breyttu myndinni fyrst. Síðan geturðu notað Ctrl + Z.": [
+    "Change the picture first. Then you can use Ctrl + Z.",
+    "Najpierw zmień obrazek. Potem możesz użyć Ctrl + Z."
+  ],
+  "Ein breyting fór til baka. Ýttu aftur á Ctrl + Z.": [
+    "One change undone. Press Ctrl + Z again.",
+    "Jedna zmiana cofnięta. Naciśnij ponownie Ctrl + Z."
+  ],
+  "Breytingin fór til baka. Prófaðu breytingarnar aftur.": [
+    "The change was undone. Try making the changes again.",
+    "Zmiana została cofnięta. Spróbuj ponownie zmienić obrazek."
+  ],
+  "Smelltu fyrst á myndina til að velja hana.": [
+    "First click the picture to select it.",
+    "Najpierw kliknij obrazek, aby go wybrać."
+  ],
+  "Þú æfðir að breyta mynd sjálf/ur og nota Ctrl + Z til að afturkalla breytingarnar.": [
+    "You practised changing a picture yourself and using Ctrl + Z to undo the changes.",
+    "Ćwiczenie polegało na samodzielnej zmianie obrazka i cofaniu zmian klawiszami Ctrl + Z."
+  ],
+  "Prófaðu með kennara: færðu mynd í PowerPoint og ýttu á Ctrl + Z til að færa hana til baka.": [
+    "Try with your teacher: move a picture in PowerPoint and press Ctrl + Z to move it back.",
+    "Spróbuj z nauczycielem: przesuń obrazek w PowerPoint i naciśnij Ctrl + Z, aby go przywrócić."
   ]
 };
   const words = {

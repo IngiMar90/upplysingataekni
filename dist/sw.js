@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'tolvuleikir-v9-three-languages';
+const CACHE = 'tolvuleikir-v10-guided-undo';
 const ASSETS = [
   "./",
   "./index.html",
@@ -57,7 +57,7 @@ const ASSETS = [
   "./assets/wrench.svg"
 ];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS.map(url => new Request(url, {cache: 'reload'})))));
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('tolvuleikir-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));

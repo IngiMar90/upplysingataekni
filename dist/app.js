@@ -17,7 +17,7 @@ function makeGames() { return {
   robot: { name: t("Vélmennaritun"), skill: t("Smella og skrifa"), description: t("Hjálpaðu vélmenninu að skrifa."), tint: '#edf1ff', icon: 'robot', learned: t("Þú æfðir að smella í textareit og nota lyklaborðið."), bridge: t("Prófaðu með kennara: smelltu í textareit í Word og skrifaðu stutt orð.") },
   doors: { name: t("Opnaðu réttu dyrnar"), skill: t("Smella og opna"), description: t("Finndu réttu dyrnar og opnaðu."), tint: '#fff0e8', icon: 'doors', learned: t("Þú æfðir að velja og opna tákn, möppur og skrár."), bridge: t("Prófaðu með kennara: veldu möppu og opnaðu hana í skráasafni tölvunnar.") },
   picture: { name: t("Myndasmiðjan"), skill: t("Færa og breyta stærð"), description: t("Komdu myndunum í rétta ramma."), tint: '#eaf5fc', icon: 'picture', learned: t("Þú æfðir að velja mynd, færa hana og breyta stærð hennar."), bridge: t("Prófaðu með kennara: settu mynd á glæru og dragðu í horn hennar til að breyta stærðinni.") },
-  undo: { name: t("Lagaðu mistökin"), skill: t("Afturkalla og laga"), description: t("Færðu myndina aftur í rétt horf."), tint: '#f1edfb', icon: 'undo', learned: t("Þú æfðir að afturkalla breytingar og prófa aftur."), bridge: t("Prófaðu með kennara: færðu mynd í PowerPoint og notaðu Afturkalla eða Ctrl + Z til að færa hana til baka.") }
+  undo: { name: t("Lagaðu mistökin"), skill: t("Afturkalla og laga"), description: t("Færðu myndina aftur í rétt horf."), tint: '#f1edfb', icon: 'undo', learned: t("Þú æfðir að breyta mynd sjálf/ur og nota Ctrl + Z til að afturkalla breytingarnar."), bridge: t("Prófaðu með kennara: færðu mynd í PowerPoint og ýttu á Ctrl + Z til að færa hana til baka.") }
 }; }
 let games = makeGames();
 function makeObjects() { return {

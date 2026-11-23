@@ -8,7 +8,7 @@ Sex rólegir leikir á íslensku, ensku og pólsku fyrir nemendur sem eru að by
 
 - **Opnaðu réttu dyrnar:** einn smellur á stórar dyr á stigi 1, tvísmellir á sex möppur á stigi 2 og tveggja skrefa leit að möppu og skrá á stigi 3. Enter opnar líka valið tákn.
 - **Myndasmiðjan:** færa eina mynd í ramma, breyta stærð hennar og loks raða þremur myndum í ramma. Raunverulegt hornhandfang breytir stærð, með Minna/Stærra hnöppum og örvatökkum sem viðbótarstuðningi.
-- **Lagaðu mistökin:** prófa breytingu og afturkalla á stigi 1; tvær eða þrjár breytingar til baka á stigum 2 og 3. Breytingasaga styður einnig Endurgera, Ctrl+Z og Ctrl+Y.
+- **Lagaðu mistökin:** sýnikennsla á eigin hraða og síðan bein myndvinnsla. Nemandi dregur mynd á annan stað á stigi 1, breytir einnig stærð með hornhandfangi á stigi 2 og eyðir myndinni með Delete á stigi 3. Ctrl + Z er sýnilegt á öllum stigum og afturkallar eina raunverulega breytingu í einu. Enginn hnappur framkvæmir breytingarnar eða afturköllunina fyrir nemandann.
 
 Umferðir hafa 6 verkefni á stigi 1, 8 á stigi 2 og 10 á stigi 3. Rétt svar sýnist í eina sekúndu og síðan kemur næsta verkefni sjálfkrafa; í ritun þarf hvorki Enter né sérstakan næsta-hnapp. Textareitur heldur fókus milli ritunarverkefna. Skipti bíða meðan stillingagluggi er opinn og falla niður þegar farið er heim eða leik skipt.
 
@@ -45,3 +45,11 @@ Manifest-auðkenni, upphafsslóð og umfang Tölvuleikja eru `/upplysingataekni/
 Tungumál vistast aðeins á tækinu í `tolvuleikir-language`; framvinda og kennarastillingar haldast við tungumálaskipti. Skipti innan leiks endurræsa núverandi verkefni á sama stigi og verkefnanúmeri. Lokaskjár má skipta um tungumál án þess að skrá lokna umferð aftur. `html.lang`, titill og upplestur fylgja tungumáli. Nöfn tungumálaflipanna eru alltaf á eigin tungumáli.
 
 `dist/i18n.js` geymir allar þýðingar og orðabanka staðbundið og er í offline-skyndiminni. `node test-i18n.cjs` athugar þýðingalykla, tungumálageymslu, orðabanka, leiðréttingarverkefni og pólskar fleirtölur. Engu er breytt í `ondun`.
+
+## Leiðsögn í afturköllun
+
+Fyrsta verkefni hverrar umferðar í Lagaðu mistökin byrjar á skrefaskiptri sýnikennslu sem sýnir breytingar og Ctrl + Z í öfugri röð. Nemandi velur sjálfur Næsta sýniskref og Ég prófa; engin tímamörk eru á sýnikennslu. Sýna mér aftur er aðgengilegt á hverju verkefni og heldur vinnu nemandans þegar snúið er til baka. Sýnikennsla bætir engu við raunverulega breytingasögu eða framvindu.
+
+Öll verkefni byrja með óbreyttri mynd. Stig 1: færa, síðan Ctrl + Z. Stig 2: færa og breyta stærð, síðan tvær afturkallanir. Stig 3: færa, breyta stærð og eyða með Delete (Alt + Backspace virkar einnig), síðan þrjár afturkallanir. Örvatakkar á mynd eða hornhandfangi eru viðbót við drátt. Aðeins fullgerð hreyfing býr til eina breytingu; pointercancel skráir ekkert. Rétt staða eftir allar nauðsynlegar afturkallanir heldur sjálfkrafa áfram. Of snemmbúin afturköllun er leyfð og nemandi getur prófað breytingarnar aftur.
+
+Leiðbeiningar, sýnikennsla, áminningar um Ctrl + Z og endurgjöf eru á öllum þremur tungumálunum.
